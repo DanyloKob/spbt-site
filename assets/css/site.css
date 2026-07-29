@@ -188,8 +188,11 @@ ul{margin:0;padding:0;list-style:none;}
 
 /* ─── Grid of cards ─────────────────────────────────────────────────────── */
 .grid{display:grid;gap:calc(var(--space)*2.5);}
-.grid--3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
-.grid--2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr));}
+/* Мінімуми підібрані так, щоб 6 карток лягали 3+3, а 4 проєкти — 2+2,
+   а не 4+2 і 3+1. `min(…,100%)` обовʼязковий: без нього auto-fit не стискає
+   колонку нижче мінімуму і на вузькому екрані сторінка їде вбік. */
+.grid--3{grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));}
+.grid--2{grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));}
 
 .card{
   position:relative;
@@ -208,7 +211,8 @@ ul{margin:0;padding:0;list-style:none;}
 
 /* Project card — has a link row at the bottom. */
 .proj{display:flex;flex-direction:column;gap:calc(var(--space)*2);}
-.proj__head{display:flex;align-items:baseline;justify-content:space-between;gap:calc(var(--space)*2);}
+/* wrap — щоб на вузьких екранах nowrap-статус не виштовхував сторінку вбік */
+.proj__head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:calc(var(--space)*1) calc(var(--space)*2);}
 .proj__status{
   font-family:var(--font-mono);font-size:var(--step--1);
   color:var(--green);white-space:nowrap;
