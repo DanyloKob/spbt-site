@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/assets/css/base.css">
+<style>
+  html,body{margin:0;width:1200px;height:630px;overflow:hidden;}
+  .og{
+    position:relative;width:1200px;height:630px;
+    background:
+      radial-gradient(760px 520px at 88% 108%, rgba(87,199,92,.26), transparent 68%),
+      radial-gradient(620px 420px at 4% -10%, rgba(110,231,135,.10), transparent 62%),
+      var(--bg);
+    padding:74px 80px;display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .og::before{
+    content:'';position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(232,242,236,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,242,236,.05) 1px, transparent 1px);
+    background-size:60px 60px;
+    mask-image:radial-gradient(900px 620px at 70% 100%, #000, transparent 80%);
+  }
+  .row{position:relative;display:flex;align-items:center;justify-content:space-between;}
+  .brand{display:flex;align-items:center;gap:16px;
+    font-family:var(--font-display);font-weight:800;font-size:30px;letter-spacing:.02em;}
+  .brand svg{width:38px;height:38px;color:var(--green);}
+  .eyebrow{font-family:var(--font-mono);font-size:19px;letter-spacing:.26em;
+    text-transform:uppercase;color:var(--green);}
+  h1{font-size:84px;line-height:1.06;letter-spacing:-.03em;margin:0;}
+  h1 span{display:block;white-space:nowrap;}
+  /* Gradient fill, not -webkit-text-stroke: the live site dropped the stroke
+     because Unbounded 800 at negative tracking turns every glyph edge into a
+     visible line and the letters knit together. Same reasoning applies here. */
+  .out{
+    background:linear-gradient(96deg,var(--green) 0%,var(--green-hi) 48%,var(--green) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .foot{font-family:var(--font-mono);font-size:20px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--muted);}
+  .tags{display:flex;gap:14px;}
+  .tags i{font-style:normal;font-family:var(--font-mono);font-size:16px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--muted);border:1px solid var(--border);
+    border-radius:999px;padding:8px 18px;background:var(--surface);}
+</style>
+</head>
+<body>
+  <div class="og">
+    <div class="row">
+      <div class="brand"><svg viewBox="0 0 2000 2000"><polygon points="1000,510 1420,755 1420,1000 1108,818 1108,1364 892,1490 892,818 580,1000 580,755" fill="currentColor"/></svg>SPBT</div>
+      <div class="eyebrow">Small Projects by Taiyo</div>
+    </div>
+    <h1><span>Малі проєкти —</span><span class="out">живий продакшн</span></h1>
+    <div class="row">
+      <div class="tags"><i>Discord-боти</i><i>Сайти</i><i>Бекенд</i><i>Презентації</i></div>
+      <div class="foot">spbt.pp.ua</div>
+    </div>
+  </div>
+</body>
+</html>

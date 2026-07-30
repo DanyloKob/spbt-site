@@ -1,0 +1,575 @@
+/* ═══ Global canvas layers ═══════════════════════════════════════════════ */
+#bg-grid{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:-2;
+  opacity:.6;
+  pointer-events:none;
+}
+
+body::after{ /* vignette so text always wins over the grid */
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 0%,transparent 40%,var(--bg) 100%);
+}
+
+/* ═══ Cursor ═════════════════════════════════════════════════════════════ */
+/* Opt-in, not opt-out: if the script never runs the native cursor stays. */
+.cursor-dot,
+.cursor-ring{
+  display:none;
+  position:fixed;
+  top:0;left:0;
+  z-index:90;
+  pointer-events:none;
+  border-radius:50%;
+  mix-blend-mode:difference;
+  will-change:transform;
+}
+body.cursor-fx .cursor-dot,
+body.cursor-fx .cursor-ring{display:block;}
+.cursor-dot{
+  width:6px;height:6px;
+  margin:-3px 0 0 -3px;
+  background:var(--green-hi);
+}
+.cursor-ring{
+  width:34px;height:34px;
+  margin:-17px 0 0 -17px;
+  border:1px solid var(--green-hi);
+  transition:width .3s var(--ease),height .3s var(--ease),margin .3s var(--ease),opacity .3s;
+}
+.cursor-ring.is-hot{
+  width:58px;height:58px;
+  margin:-29px 0 0 -29px;
+  background:rgba(110,231,135,.08);
+}
+body.cursor-fx,
+body.cursor-fx a,
+body.cursor-fx button{cursor:none;}
+
+/* ═══ Page transition wipe ═══════════════════════════════════════════════ */
+.page-wipe{
+  position:fixed;
+  inset:0;
+  z-index:120;
+  background:var(--green);
+  transform:scaleY(0);
+  transform-origin:bottom;
+  pointer-events:none;
+}
+.page-wipe.is-out{
+  transform:scaleY(1);
+  transition:transform .42s var(--ease-io);
+}
+.page-wipe.is-in{
+  transform:scaleY(0);
+  transform-origin:top;
+  transition:transform .52s var(--ease-io);
+}
+
+/* ═══ Navbar ═════════════════════════════════════════════════════════════ */
+.nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:80;
+  height:var(--nav-h);
+  display:flex;
+  align-items:center;
+  transition:transform .45s var(--ease),background .35s,border-color .35s,backdrop-filter .35s;
+  border-bottom:1px solid transparent;
+}
+.nav--solid{
+  background:rgba(5,8,7,.72);
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  border-bottom-color:var(--border);
+}
+.nav--hidden{transform:translateY(-100%);}
+
+.nav__inner{
+  display:flex;
+  align-items:center;
+  gap:calc(var(--space)*3);
+  width:min(100% - calc(var(--space)*5),var(--container));
+  margin-inline:auto;
+}
+
+.nav__logo{
+  display:flex;
+  align-items:center;
+  gap:calc(var(--space)*1.25);
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:1.05rem;
+  letter-spacing:.02em;
+  margin-right:auto;
+}
+.nav__logo svg{width:20px;height:20px;color:var(--green);transition:transform .5s var(--ease);}
+.nav__logo:hover svg{transform:translateY(-3px) rotate(-8deg);}
+/* Replaced content in a non-wrapping flex row resolves min-width to 0, so the
+   mark was the first thing sacrificed when the bar ran out of room — measured
+   width 0px on the case pages at 320px. It must never shrink. */
+.nav__logo,
+.nav__logo svg{flex:none;}
+
+/* Icon-only mark: no wordmark, so the bar stays quiet and the glyph reads
+   as a button rather than a title. */
+.nav__logo--icon{
+  gap:0;
+  margin-right:calc(var(--space)*1);
+  padding:calc(var(--space)*1);
+  border-radius:12px;
+  border:1px solid transparent;
+  transition:border-color .3s var(--ease),background .3s var(--ease);
+}
+.nav__logo--icon svg{width:24px;height:24px;}
+.nav__logo--icon:hover{border-color:var(--green-line);background:var(--green-soft);}
+
+.nav__who{
+  margin-right:auto;
+  font-size:var(--step--1);
+  font-weight:500;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--muted);
+  transition:color .3s var(--ease);
+  white-space:nowrap;
+}
+.nav__who:hover,
+.nav__who[aria-current="true"]{color:var(--text);}
+
+/* ── Language pill ──────────────────────────────────────────────────────
+   Two labels in a capsule with a slider behind the active one. The slider
+   is a sibling, positioned by :has() so no JS is needed; browsers without
+   :has() simply show the active label brighter, which is still correct. */
+.lang{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  padding:3px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:var(--surface);
+}
+.lang__opt{
+  position:relative;
+  z-index:1;
+  padding:calc(var(--space)*.75) calc(var(--space)*1.75);
+  border-radius:999px;
+  font-family:var(--font-mono);
+  font-size:.72rem;
+  font-weight:500;
+  letter-spacing:.1em;
+  color:var(--muted);
+  transition:color .3s var(--ease);
+}
+.lang__opt.is-on{color:var(--text);}
+.lang__opt--soon{cursor:not-allowed;opacity:.45;}
+.lang__opt--soon:hover{color:var(--muted);}
+
+.lang__slider{
+  position:absolute;
+  top:3px;
+  bottom:3px;
+  left:3px;
+  width:calc(50% - 3px);
+  border-radius:999px;
+  background:var(--green-soft);
+  border:1px solid var(--green-line);
+  transition:transform .42s var(--ease);
+}
+/* The English page adds .lang--en on the capsule and the slider moves over.
+   A plain class, not :has() — one attribute in the markup beats a selector
+   that has to guess which of two different element types came last. */
+.lang--en .lang__slider{transform:translateX(100%);}
+
+.nav__cta{white-space:nowrap;}
+
+/* `.nav__links`, `.nav__pill` and `.nav__burger` used to live here. Every page
+   now ships the same slim bar — icon, one link, language pill (index only),
+   one action — so the multi-link row, its sliding indicator and the mobile
+   drawer have no markup left anywhere and are gone rather than left dormant.
+   Their absence is what let `initMobileMenu()` go too. */
+
+/* ═══ Hero ═══════════════════════════════════════════════════════════════ */
+.hero{
+  position:relative;
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  /* Symmetric on purpose. `justify-content:center` centres inside the content
+     box, so an asymmetric padding-block displaces the content by half the
+     difference — the old 136px/80px left the hero 28px low, the one slide that
+     did not reach 0 when scroll-padding was zeroed. The top value still clears
+     the fixed nav. */
+  padding:calc(var(--nav-h) + var(--space)*8) 0;
+}
+.hero__inner{
+  display:grid;
+  grid-template-columns:minmax(0,1.32fr) minmax(0,.68fr);
+  align-items:center;
+  gap:calc(var(--space)*8);
+}
+.hero__title{margin:calc(var(--space)*2) 0 calc(var(--space)*4);}
+.hero__title span{display:block;}
+/* The two lines are designed as single lines; only hold that where they fit —
+   and above 1040px the copy column is 66% of a container that stops growing at
+   1280px, while --step-4 keeps climbing to its 70.4px cap. Those two curves
+   cross: Unbounded 800 renders the accent line at ~11.35em, so it wanted 800px
+   inside a 723px column at 1200px wide. The overflow did not merely stick out.
+   `.u-outline` paints its letters with `background-clip:text`, and a background
+   stops at the element box, so every glyph past the edge became invisible —
+   measured on the live portfolio: 77px of "що запускається." simply gone
+   between 1041px and 1319px.
+
+   Tying the size to the viewport across that band keeps the line inside the
+   column. The coefficient is measured, not guessed: at 1041px it yields 51px
+   against a 54px ceiling, and it holds for both this site's 16-character line
+   and the 14-character one on spbt.pp.ua, which is why this lives in the shared
+   stylesheet instead of one site's overrides.
+
+   The 4.25rem ceiling is deliberately below --step-4's 4.4rem. At the full size
+   the accent line measured 800px inside an 803px column — correct in Chromium,
+   but three pixels is not a margin, it is a coincidence, and the failure mode is
+   letters silently disappearing rather than anything visibly wrong. 4.25rem
+   costs 2.4px of display size at the widest screens and buys 30px of slack for
+   whatever a different platform's font metrics do. */
+@media (min-width:1041px){
+  .hero__title span{white-space:nowrap;}
+  .hero__title{font-size:clamp(2.5rem,4.9vw,4.25rem);}
+}
+.hero__lead{
+  font-size:var(--step-1);
+  color:var(--muted);
+  max-width:52ch;
+  margin-bottom:calc(var(--space)*5);
+}
+.hero__actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:calc(var(--space)*2);
+  margin-bottom:calc(var(--space)*6);
+}
+.hero__tags{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:calc(var(--space)*2);
+  color:var(--muted);
+}
+.hero__tags li{display:flex;align-items:center;gap:calc(var(--space)*2);}
+.hero__tags li:not(:last-child)::after{
+  content:'';
+  width:4px;height:4px;
+  border-radius:50%;
+  background:var(--green);
+  opacity:.6;
+}
+
+.hero__visual{perspective:1000px;}
+
+.hero__scroll{
+  position:absolute;
+  left:50%;
+  bottom:calc(var(--space)*3);
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:calc(var(--space)*1.5);
+  color:var(--muted);
+  font-size:.66rem;
+}
+.hero__scroll i{
+  display:block;
+  width:1px;height:44px;
+  background:linear-gradient(var(--green),transparent);
+  animation:scroll-hint 2.2s var(--ease-io) infinite;
+  transform-origin:top;
+}
+@keyframes scroll-hint{
+  0%{transform:scaleY(0);opacity:0;}
+  35%{transform:scaleY(1);opacity:1;}
+  100%{transform:scaleY(1) translateY(44px);opacity:0;}
+}
+
+/* ═══ Sections ═══════════════════════════════════════════════════════════ */
+.section{
+  position:relative;
+  padding:calc(var(--space)*16) 0;
+  /* Second declaration on purpose — a browser without svh keeps the 256px
+     above. A fixed 256px of padding inside a `min-height:100svh` slide made
+     #ftl 821px tall in an 800px viewport: min-height stopped governing, the
+     slide outgrew the screen, and every slide after it landed on a fractional
+     snap position. Capping against the viewport keeps each one exactly one
+     screen tall. */
+  padding-block:min(calc(var(--space)*16),12svh);
+}
+/* Every slide keeps the page background, so the pointer-reactive dot lattice
+   (a fixed canvas painted behind everything) stays visible on all of them.
+   An opaque tint here would cover that canvas — which is exactly why the
+   former green sections looked dead under the cursor. Separation is carried
+   by a hairline instead of a fill. */
+.section--soft::before,
+.section--soft::after{
+  content:'';
+  position:absolute;
+  left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--border-hi),transparent);
+}
+.section--soft::before{top:0;}
+.section--soft::after{bottom:0;}
+
+/* `min(20ch,100%)` — at phone display sizes 20ch is ~700px, so the bare cap
+   was inert there and misleading to read. */
+.section__title{margin-bottom:calc(var(--space)*7);max-width:min(20ch,100%);}
+.section__lead{
+  font-size:var(--step-1);
+  color:var(--muted);
+  max-width:60ch;
+  margin:calc(var(--space)*-4) 0 calc(var(--space)*7);
+}
+
+/* ═══ Slides ═════════════════════════════════════════════════════════════
+   Native scroll-snap, never a wheel handler — keyboard, trackpad, scrollbar,
+   find-in-page and screen readers keep working.
+
+   `mandatory` + `scroll-snap-stop:always` is what makes a small flick throw
+   you all the way to the next slide and makes stopping between two slides
+   impossible. `always` also caps one gesture at one slide, so a hard fling
+   cannot skip three.
+
+   The catch: with `mandatory`, content taller than the viewport can become
+   unreachable. Guarded two ways — height stays a floor (`min-height`, never
+   fixed), and the whole thing only engages when the viewport is tall enough
+   to hold a slide. Short or narrow screens fall back to `proximity`, where
+   the browser assists but never traps. */
+@media (prefers-reduced-motion:no-preference){
+  html.slides{scroll-snap-type:y proximity;}
+}
+/* Scoped to `html.slides`, and the breakpoint matches the one that releases
+   `min-height:100svh` below. They used to disagree — snapping engaged at
+   760px while full-height slides stopped at 900px, so 760-900px tablets got
+   hard one-slide-per-gesture snapping on sections sized to their content,
+   which is the trap the guard above exists to avoid. */
+@media (prefers-reduced-motion:no-preference) and (min-width:901px) and (min-height:600px){
+  html.slides{
+    scroll-snap-type:y mandatory;
+    /* Zeroed on purpose. `scroll-snap-align:start` honours scroll-padding, so
+       an 88px padding parked every slide 88px down the viewport — and because
+       each slide centres its own content, the content moved down by the full
+       88px too. Measured: exactly +88px off-centre on every slide. Slides are
+       viewport-height with centred content, so no padding is wanted here. */
+    scroll-padding-top:0;
+  }
+  .snap{scroll-snap-stop:always;}
+
+  /* The footer is not a slide, but with `mandatory` it still needs a snap
+     point or it becomes unreachable: the scroller refuses to leave the last
+     slide's snap position and the footer stays parked just below the fold.
+     Measured before this rule: footer top sat exactly at the viewport bottom
+     with 266px of scroll range that could not be used. `end` lets it come up
+     flush against the bottom edge without giving it a slide's height. */
+  .slides .footer{scroll-snap-align:end;}
+}
+.snap{
+  scroll-snap-align:start;
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+@supports not (height:100svh){
+  .snap{min-height:100vh;}
+}
+
+/* ═══ Footer ═════════════════════════════════════════════════════════════ */
+.footer{
+  border-top:1px solid var(--border);
+  padding:calc(var(--space)*7) 0 calc(var(--space)*8);
+}
+.footer__inner{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:start;
+  gap:calc(var(--space)*4) calc(var(--space)*6);
+}
+.footer__inner p{margin:0;}
+
+.footer__brand{display:flex;flex-direction:column;gap:calc(var(--space)*1);}
+.footer__brand strong{font-family:var(--font-display);letter-spacing:.01em;}
+.footer__meta{font-size:var(--step--1);color:var(--muted);}
+
+.footer__nav{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:calc(var(--space)*1) calc(var(--space)*3);
+}
+.footer__nav a{
+  font-size:var(--step--1);
+  color:var(--muted);
+  text-decoration:none;
+  transition:color .22s var(--ease);
+}
+.footer__nav a:hover,
+.footer__nav a:focus-visible{color:var(--text);}
+
+/* Powered-by strip — spans the full width under the grid. */
+.footer__powered{
+  grid-column:1/-1;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:calc(var(--space)*1.5);
+  padding-top:calc(var(--space)*4);
+  border-top:1px solid var(--border);
+  font-family:var(--font-mono);
+  font-size:var(--step--1);
+  color:var(--muted);
+}
+.footer__powered a{
+  color:var(--text);
+  font-weight:700;
+  text-decoration:none;
+  border-bottom:1px solid var(--green-line);
+  transition:color .22s var(--ease),border-color .22s var(--ease);
+}
+.footer__powered a:hover,
+.footer__powered a:focus-visible{
+  color:var(--green-hi);
+  border-bottom-color:var(--green-hi);
+}
+
+@media (max-width:640px){
+  .footer__inner{grid-template-columns:1fr;}
+  .footer__nav{justify-content:flex-start;}
+}
+
+/* ═══ Case-page header ═══════════════════════════════════════════════════ */
+.case{
+  padding:calc(var(--nav-h) + var(--space)*14) 0 calc(var(--space)*10);
+}
+.case__back{
+  display:inline-flex;
+  align-items:center;
+  gap:calc(var(--space)*1.25);
+  color:var(--muted);
+  margin-bottom:calc(var(--space)*4);
+  transition:color .3s var(--ease),gap .3s var(--ease);
+}
+.case__back:hover{color:var(--green);gap:calc(var(--space)*2);}
+.case__mark{
+  display:block;
+  width:56px;height:56px;
+  color:var(--green);
+  margin-bottom:calc(var(--space)*3);
+  filter:drop-shadow(var(--glow-sm));
+}
+.case__mark svg{width:100%;height:100%;}
+.case__lead{
+  font-size:var(--step-1);
+  color:var(--muted);
+  max-width:56ch;
+  margin:calc(var(--space)*3) 0 calc(var(--space)*5);
+}
+
+/* ═══ Responsive ═════════════════════════════════════════════════════════ */
+@media (max-width:1040px){
+  /* `minmax(0,1fr)`, not bare `1fr`. Bare `1fr` means `minmax(auto,1fr)`, and
+     the auto floor is min-content — one unbreakable word ("запускається.")
+     could stretch the column past its container. `overflow-wrap:break-word`
+     stops the visible clip but, unlike `anywhere`, does not reduce min-content
+     contribution, so the column could still grow. */
+  .hero__inner{grid-template-columns:minmax(0,1fr);gap:calc(var(--space)*6);}
+  .hero__visual{max-width:440px;}
+}
+
+/* ═══ Phones and small tablets ═══════════════════════════════════════════
+   Nothing in the bar is hidden at any width any more. The rules that used to
+   sit here served a burger drawer, and one of them — `.nav__inner > .btn
+   {display:none}` — swallowed the "Контакти" button outright: measured height
+   0 at 320, 390 and 430, so a phone visitor could not reach contacts from the
+   bar at all. Every page now carries the same three or four small items, which
+   fit a 320px screen intact. */
+@media (max-width:900px){
+  :root{--nav-h:60px;}
+
+  /* Bigger hit areas without moving any text: these are bare inline links,
+     measured ~110x18 and ~60x20, well under a comfortable touch target. */
+  .nav__who{display:inline-flex;align-items:center;min-height:44px;}
+  .footer__nav a,
+  .footer__powered a{display:inline-flex;align-items:center;min-height:44px;}
+  .footer__nav{gap:0 calc(var(--space)*3);}
+
+  .nav__inner{gap:calc(var(--space)*1.5);}
+  .nav__who{
+    /* Keeps its full label while there is room; the letter-spacing is what
+       makes it wide, so that goes first. */
+    letter-spacing:.08em;
+    font-size:.68rem;
+  }
+  .nav__cta{padding:calc(var(--space)*1.25) calc(var(--space)*2.25);}
+  .lang__opt{padding:calc(var(--space)*.75) calc(var(--space)*1.25);font-size:.66rem;}
+
+  /* Slides stop being forced to a full viewport. On a phone the content is
+     usually taller than the screen anyway, so demanding 100svh only added
+     dead space above and below; letting sections size to their content is
+     what makes the page read tightly. Snapping is already `proximity` here,
+     so nothing needs a fixed height to work. */
+  /* `.pjslide` is released in components.css instead, next to the 100svh
+     declaration it has to beat: that file loads after this one and the two
+     selectors are equally specific, so the release only works from there. */
+  .snap{min-height:0;}
+  .section{padding:calc(var(--space)*9) 0;}
+  .hero{
+    min-height:0;
+    padding:calc(var(--nav-h) + var(--space)*7) 0 calc(var(--space)*8);
+  }
+  .hero__scroll{display:none;}
+  .case{padding-top:calc(var(--nav-h) + var(--space)*9);}
+
+  .section__title{margin-bottom:calc(var(--space)*4);}
+  .section__lead{margin:calc(var(--space)*-2) 0 calc(var(--space)*4);}
+}
+
+@media (max-width:620px){
+  .nav__who{
+    font-size:.62rem;
+    letter-spacing:.06em;
+  }
+  /* Was .62rem — 9.9px on every phone, because it is a fixed rem with no fluid
+     term. This is a readable floor, not a decorative one. */
+  .hero__tags{font-size:.72rem;gap:calc(var(--space)*1.25);}
+  .hero__tags li{gap:calc(var(--space)*1.25);}
+  .footer__nav{gap:calc(var(--space)*1) calc(var(--space)*2);}
+}
+
+
+@media (max-width:400px){
+  /* Below this the bar cannot hold the wordmark honestly. The logo already
+     links home and the pill plus CTA are the two things a visitor needs. */
+  .nav__who{display:none;}
+  .nav__logo--icon{margin-right:auto;}
+
+  /* At 320px the display size put "запускається." at ~323px inside a 280px
+     column — a single word wider than its container, which pushed the whole
+     page 18px sideways. Unbounded has no narrow variant, so the size has to
+     come down; `overflow-wrap` is the guard so no future long word can do the
+     same thing again. */
+  .hero__title{font-size:clamp(1.5rem,7.4vw,2rem);}
+  .pj__title{font-size:clamp(1.7rem,8vw,2.2rem);}
+}
+
+/* Headline type must never be able to overflow its column. Applied at every
+   width: a long product name or a URL in a heading would otherwise widen the
+   page rather than wrap. */
+h1,h2,h3,.pj__title,.hero__title{overflow-wrap:break-word;}

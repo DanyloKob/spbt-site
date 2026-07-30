@@ -1,5 +1,8 @@
 <!doctype html>
-<html lang="uk">
+<!-- `slides` scopes the scroll-snap layout to this page, exactly as on the
+     portfolio: 404.html is an ordinary short document and must not inherit
+     mandatory snapping or a zeroed scroll-padding. -->
+<html lang="uk" class="slides">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,207 +12,332 @@
     document.documentElement.classList.add('js-stalled');
   }, 2500);
 </script>
-<title>SPBT — Small Projects by Taiyo · Discord-боти, сайти, презентації</title>
-<meta name="description" content="SPBT (Small Projects by Taiyo) — Discord-боти з веб-панелями, сайти під ключ, інтерактивні презентації, Unity та Blender. Готові проєкти, живий продакшн і прямий контакт із розробником.">
+<title>SPBT — Discord-боти, сайти та презентації на замовлення</title>
+<meta name="description" content="SPBT (Small Projects by Taiyo) — Discord-боти з веб-панелями, сайти під ключ, бекенд та інтерактивні презентації на замовлення. Дивіться, що вже працює, і пишіть напряму розробнику.">
 <meta name="author" content="Taiyo Asano">
 <meta name="theme-color" content="#050807">
-<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://spbt.pp.ua/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="uk_UA">
 <meta property="og:site_name" content="SPBT">
-<meta property="og:title" content="SPBT — Small Projects by Taiyo">
-<meta property="og:description" content="Discord-боти з веб-панелями, сайти під ключ, інтерактивні презентації, Unity та Blender.">
+<meta property="og:title" content="SPBT — Discord-боти, сайти та презентації на замовлення">
+<meta property="og:description" content="Малі проєкти — живий продакшн. Discord-боти з веб-панелями, сайти під ключ, бекенд та інтерактивні презентації. Пишіть напряму розробнику.">
 <meta property="og:url" content="https://spbt.pp.ua/">
-<meta property="og:image" content="https://spbt.pp.ua/assets/img/favicon.svg">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SPBT — Small Projects by Taiyo">
-<meta name="twitter:description" content="Discord-боти з веб-панелями, сайти під ключ, інтерактивні презентації, Unity та Blender.">
-<link rel="preload" href="assets/fonts/unbounded-800-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/manrope-400-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css">
-<script type="module" src="assets/js/site.js"></script>
+<meta property="og:image" content="https://spbt.pp.ua/assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SPBT — Discord-боти, сайти та презентації на замовлення">
+<meta name="twitter:description" content="Малі проєкти — живий продакшн. Боти, сайти, бекенд, презентації. Пишіть напряму розробнику.">
+<meta name="twitter:image" content="https://spbt.pp.ua/assets/img/og.png">
+<link rel="preload" href="/assets/fonts/unbounded-800-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/manrope-400-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/layout.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/spbt.css">
+<script type="module" src="/assets/js/site.js"></script>
 </head>
 <body>
+<canvas id="bg-grid" aria-hidden="true"></canvas>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+<div class="page-wipe" aria-hidden="true"></div>
 
-<a class="u-sr" href="#services">Перейти до вмісту</a>
+<a class="u-sr" href="#work">Перейти до вмісту</a>
 
 <header class="nav" data-nav>
-  <div class="u-container nav__inner">
+  <div class="nav__inner">
     <a class="nav__logo" href="#top" aria-label="SPBT — на початок">
       <svg viewBox="0 0 2000 2000" aria-hidden="true"><polygon points="1000,510 1420,755 1420,1000 1108,818 1108,1364 892,1490 892,818 580,1000 580,755" fill="currentColor"/></svg>
       SPBT
     </a>
-    <nav class="nav__links" aria-label="Основна навігація">
-      <a href="#services">Послуги</a>
-      <a href="#work">Проєкти</a>
-      <a href="#contact">Контакти</a>
-    </nav>
-    <a class="btn" href="https://discord.com/invite/b8QpW8W6fR" target="_blank" rel="noopener">Discord <span aria-hidden="true">↗</span></a>
+    <a class="btn btn--sm btn--primary nav__cta" data-magnetic href="#contact">Замовити</a>
   </div>
 </header>
 
-<main id="top">
+<main>
 
-  <!-- ═══ Hero ═════════════════════════════════════════════════════════ -->
-  <section class="hero">
-    <div class="u-container hero__inner">
-      <p class="u-mono u-eyebrow" data-reveal>Small Projects by Taiyo</p>
-      <h1 class="hero__title" data-reveal>Маленька студія, <em>справжній продакшн</em>.</h1>
-      <p class="hero__lead" data-reveal>
-        SPBT — це я, Таійо, і проєкти, які реально працюють: Discord-бот на
-        сотнях серверів, сайт ліцею, презентації для конференцій. Беруся за
-        невеликі задачі й веду їх від ідеї до деплою.
-      </p>
-      <div class="hero__actions" data-reveal>
-        <a class="btn btn--primary" href="#contact">Замовити <span aria-hidden="true">→</span></a>
-        <a class="btn" href="#work">Що вже зроблено <span aria-hidden="true">→</span></a>
+  <!-- ═══ 01 · Hero ══════════════════════════════════════════════════ -->
+  <section class="hero snap" id="top">
+    <div class="hero__inner u-container">
+      <div class="hero__copy">
+        <p class="u-mono u-eyebrow" data-reveal>Small Projects by Taiyo</p>
+        <!-- Заголовок без крапки в кінці й із незламним пробілом перед тире:
+             тире не має лишатися саме на рядку, якщо рядок таки переноситься.
+             Довжина рядків тут не декоративна, а вимірена — див. коментар про
+             .hero__title у assets/css/spbt.css. -->
+        <h1 class="hero__title">
+          <span data-type-in>Малі проєкти&nbsp;—</span>
+          <span class="u-outline" data-reveal data-reveal-delay="2">живий продакшн</span>
+        </h1>
+        <!-- Раніше тут стояло «усе, що на цій сторінці, вже працює» — і сама
+             ж сторінка це заперечувала: сайт ліцею тричі позначений як
+             «у розробці». Обіцянка, яку власний текст поруч спростовує, шкодить
+             більше, ніж скромніше формулювання. -->
+        <p class="hero__lead" data-reveal data-reveal-delay="1">
+          Discord-боти з веб-панелями, сайти під ключ, бекенд та інтерактивні
+          презентації. Не концепти й не демо: те, що вже запущено, працює на
+          живих серверах, а те, що в роботі, так і підписано.
+        </p>
+        <div class="hero__actions" data-reveal data-reveal-delay="2">
+          <a class="btn btn--primary" data-magnetic href="#contact">Замовити <span aria-hidden="true">→</span></a>
+          <a class="btn" data-magnetic href="#work">Що вже працює <span aria-hidden="true">→</span></a>
+        </div>
+        <ul class="hero__tags u-mono" data-reveal data-reveal-delay="3">
+          <li>Discord-боти</li><li>Сайти під ключ</li><li>Веб-панелі</li><li>Презентації</li>
+        </ul>
       </div>
-      <ul class="hero__tags u-mono" data-reveal>
-        <li>Discord-боти</li><li>Web fullstack</li><li>Презентації</li><li>Unity</li><li>Blender</li>
-      </ul>
+
+      <div class="hero__visual" data-reveal data-reveal-delay="2">
+        <div class="glyph-card">
+          <canvas id="hero-mark" aria-hidden="true"></canvas>
+        </div>
+      </div>
     </div>
+    <div class="hero__scroll u-mono" aria-hidden="true"><span>Гортайте</span><i></i></div>
   </section>
 
-  <!-- ═══ Послуги ══════════════════════════════════════════════════════ -->
-  <section class="section section--soft" id="services">
-    <div class="u-container">
-      <p class="u-mono u-eyebrow" data-reveal>Послуги</p>
-      <h2 class="section__title" data-reveal>Що ми готові вам зробити</h2>
-      <p class="section__lead" data-reveal>
-        Кожен пункт — не теорія, а те, що вже стоїть у продакшені. Нижче,
-        у «Проєктах», можна подивитись на результат.
-      </p>
+  <!-- ═══ 02–04 · Що вже працює, горизонтально ═══════════════════════
+       Те саме рішення, що на портфоліо: секція втричі вища за екран, у ній
+       sticky-сцена, а рух панелей дає translateX від прогресу звичайної
+       вертикальної прокрутки. Скрол лишається нативним — скролбар, клавіші
+       й пошук по сторінці працюють. Три невидимі якорі дають по одній
+       snap-точці на панель.                                           -->
+  <section class="pjtrack" id="work" data-pjtrack>
+    <span class="pjtrack__anchor pjtrack__anchor--1" aria-hidden="true"></span>
+    <span class="pjtrack__anchor pjtrack__anchor--2" aria-hidden="true"></span>
+    <span class="pjtrack__anchor pjtrack__anchor--3" aria-hidden="true"></span>
 
-      <div class="grid grid--3">
-        <article class="card" data-reveal>
+    <div class="pjtrack__stage">
+      <div class="pjtrack__row" data-pjrow>
+
+        <article class="pjslide pj" id="tano">
+          <div class="u-container pj__inner">
+            <div class="pj__copy">
+              <p class="u-mono u-eyebrow" data-reveal>Працює зараз — 01</p>
+              <h2 class="pj__title" data-reveal data-reveal-delay="1">TANO</h2>
+              <p class="pj__lead" data-reveal data-reveal-delay="2">
+                Discord-бот, який виріс в екосистему: модерація, тікети, рівні,
+                музика, приватні войси, AI, конструктор повідомлень і власна
+                веб-панель керування сервером. Живе на нашому сервері й працює
+                просто зараз.
+              </p>
+              <dl class="stats" data-reveal data-reveal-delay="3">
+                <div><dt class="u-mono">Систем</dt><dd data-counter="15">15</dd></div>
+                <div><dt class="u-mono">Команд модерації</dt><dd data-counter="12">12</dd></div>
+                <div><dt class="u-mono">У продакшені з</dt><dd>2025</dd></div>
+              </dl>
+              <ul class="chips u-mono" data-reveal data-reveal-delay="4">
+                <li>AI</li><li>Музика</li><li>Модерація</li><li>Тікети</li><li>Веб-панель</li>
+              </ul>
+              <div class="card__actions" data-reveal data-reveal-delay="5">
+                <a class="btn btn--primary" data-magnetic href="https://tano.pp.ua/" target="_blank" rel="noopener">tano.pp.ua <span aria-hidden="true">↗</span></a>
+                <!-- aria-label, бо на сторінці два посилання з текстом «Кейс»:
+                     у списку посилань екранного читача вони були б нерозрізненні.
+                     Видимий текст входить у назву, тому керування голосом
+                     («натисни Кейс») теж працює. -->
+                <a class="btn" data-magnetic href="https://taiyo.is-a.dev/tano/" target="_blank" rel="noopener" aria-label="Кейс TANO">Кейс <span aria-hidden="true">↗</span></a>
+              </div>
+            </div>
+            <div class="pj__visual" data-reveal data-reveal-delay="2">
+              <img src="/assets/img/tano-banner.png" width="1280" height="640" loading="lazy"
+                   alt="Логотип TANO: зелена стрілка-Т і напис TANO на темному тлі">
+            </div>
+          </div>
+        </article>
+
+        <article class="pjslide pj" id="sites">
+          <div class="u-container pj__inner">
+            <div class="pj__copy">
+              <p class="u-mono u-eyebrow" data-reveal>Працює зараз — 02</p>
+              <h2 class="pj__title" data-reveal data-reveal-delay="1">Сайти під ключ</h2>
+              <p class="pj__lead" data-reveal data-reveal-delay="2">
+                Верстка, бекенд, домен, HTTPS, деплой. Живі приклади —
+                <strong class="u-nb">taiyo.is-a.dev</strong> і сторінка, яку ви читаєте:
+                статика без фреймворків, самохостні шрифти, нуль залежностей.
+                У роботі — сайт Івано-Франківського наукового фізико-технічного
+                ліцею: переносимо з Joomla на швидку статику.
+              </p>
+              <ul class="chips u-mono" data-reveal data-reveal-delay="3">
+                <li>Статика</li><li>Node.js</li><li>GitHub Pages</li><li>Власний сервер</li><li>Адаптив</li>
+              </ul>
+              <div class="card__actions" data-reveal data-reveal-delay="4">
+                <a class="btn btn--primary" data-magnetic href="https://taiyo.is-a.dev/" target="_blank" rel="noopener">taiyo.is-a.dev <span aria-hidden="true">↗</span></a>
+                <a class="btn" data-magnetic href="https://taiyo.is-a.dev/ftl/" target="_blank" rel="noopener">Кейс ліцею <span aria-hidden="true">↗</span></a>
+              </div>
+            </div>
+            <!-- Знімок сайту ліцею навмисно розмитий і під водяним знаком:
+                 проєкт не запущено, а показувати чужу сторінку до релізу —
+                 не наше право. Розмиття та штамп накладені CSS-ом, сам файл
+                 недоторканий, тому на запуску це знімається одним рядком. -->
+            <div class="pj__visual" data-reveal data-reveal-delay="2">
+              <div class="teaser__shot">
+                <img src="/assets/img/ftl-shot.jpg" width="1100" height="688" loading="lazy"
+                     alt="Розмитий фрагмент майбутнього сайту Івано-Франківського наукового фізико-технічного ліцею">
+                <span class="teaser__mark" aria-hidden="true">
+                  <i>СКОРО</i><i>СКОРО</i><i>СКОРО</i><i>СКОРО</i><i>СКОРО</i><i>СКОРО</i>
+                </span>
+              </div>
+              <p class="u-mono teaser__state">Сайт ліцею — у розробці</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="pjslide pj" id="decks">
+          <div class="u-container pj__inner">
+            <div class="pj__copy">
+              <p class="u-mono u-eyebrow" data-reveal>Працює зараз — 03</p>
+              <h2 class="pj__title" data-reveal data-reveal-delay="1">Інтерактивні презентації</h2>
+              <p class="pj__lead" data-reveal data-reveal-delay="2">
+                Доповідь як один HTML-файл: вшиті шрифти, робота без інтернету,
+                керування пультом, інтерактивні слайди. Приклад — «Play, Emotions
+                &amp; AI» для UATEFL Conference Lviv 2026. Замовниця — Olena Kobzar.
+                Матеріали публікуються за її згодою.
+              </p>
+              <ul class="chips u-mono" data-reveal data-reveal-delay="3">
+                <li>Один файл</li><li>Офлайн</li><li>Вшиті шрифти</li><li>Гайд для доповідача</li>
+              </ul>
+              <div class="card__actions" data-reveal data-reveal-delay="4">
+                <a class="btn btn--primary" data-magnetic href="https://taiyo.is-a.dev/decks/" target="_blank" rel="noopener" aria-label="Кейс презентації">Кейс <span aria-hidden="true">↗</span></a>
+                <a class="btn" data-magnetic href="#order">Замовити <span aria-hidden="true">→</span></a>
+              </div>
+            </div>
+            <div class="pj__visual" data-reveal data-reveal-delay="2">
+              <img src="/assets/img/deck-shot.jpg" width="1100" height="688" loading="lazy"
+                   alt="Титульний слайд презентації Play, Emotions and AI із заголовком та даними доповідачки">
+            </div>
+          </div>
+        </article>
+
+      </div><!-- /.pjtrack__row -->
+
+      <div class="pjtrack__dots" data-pjdots aria-hidden="true">
+        <span class="is-on"></span><span></span><span></span>
+      </div>
+      <p class="pjtrack__hint u-mono" aria-hidden="true">Гортайте — проєкти йдуть убік</p>
+    </div><!-- /.pjtrack__stage -->
+  </section>
+
+  <!-- ═══ 05 · Що можна замовити ═════════════════════════════════════ -->
+  <section class="section section--soft snap" id="order">
+    <div class="u-container">
+      <p class="u-mono u-eyebrow" data-reveal>Замовлення</p>
+      <h2 class="section__title" data-reveal data-reveal-delay="1">Що можна замовити</h2>
+      <p class="section__lead" data-reveal data-reveal-delay="2">
+        Чотири речі, які ми робимо регулярно й доводимо до запуску.
+      </p>
+      <div class="cards cards--offer">
+        <article class="card card--skill" data-tilt data-reveal data-reveal-delay="1">
           <span class="card__num u-mono">01</span>
-          <h3>Discord-боти</h3>
-          <p>Багатомодульні боти з веб-панеллю керування, базами даних, рівнями,
-             тікетами, модерацією, музикою й AI. Власний хостинг і моніторинг.</p>
+          <h3>Discord-бот</h3>
+          <p>Модулі під ваш сервер: модерація, тікети, рівні, музика, AI,
+             приватні войси. З веб-панеллю, якщо керувати командами незручно.</p>
         </article>
-        <article class="card" data-reveal>
+        <article class="card card--skill" data-tilt data-reveal data-reveal-delay="2">
           <span class="card__num u-mono">02</span>
-          <h3>Сайти під ключ</h3>
-          <p>Від верстки до деплою: статика на GitHub Pages або повноцінний
-             Node.js-бекенд на власному сервері з доменом і HTTPS.</p>
+          <h3>Сайт під ключ</h3>
+          <p>Лендинг, багатосторінковий сайт або перенесення старого. Домен, HTTPS,
+             адаптив під телефон, швидке завантаження.</p>
         </article>
-        <article class="card" data-reveal>
+        <article class="card card--skill" data-tilt data-reveal data-reveal-delay="3">
           <span class="card__num u-mono">03</span>
-          <h3>Інтерактивні презентації</h3>
-          <p>Доповідь як один самодостатній HTML-файл: вшиті шрифти, робота
-             без інтернету, інтерактивні слайди. Нічого не зламається на місці.</p>
+          <h3>Веб-панель і бекенд</h3>
+          <p>Node.js, база даних, вхід через Discord, API. Те, що керує ботом
+             або сайтом ізсередини.</p>
         </article>
-        <article class="card" data-reveal>
+        <article class="card card--skill" data-tilt data-reveal data-reveal-delay="4">
           <span class="card__num u-mono">04</span>
-          <h3>Unity</h3>
-          <p>Ігрова логіка, сцени, механіки, збірки під платформи.</p>
+          <h3>Інтерактивна презентація</h3>
+          <p>Один HTML-файл, який відкриється на будь-якому ноутбуці без
+             інтернету. З гайдом для доповідача.</p>
         </article>
-        <article class="card" data-reveal>
-          <span class="card__num u-mono">05</span>
-          <h3>Blender</h3>
-          <p>3D-моделі, матеріали, рендери — під гру, сайт або друк.</p>
-        </article>
-        <article class="card" data-reveal>
-          <span class="card__num u-mono">06</span>
-          <h3>Підтримка</h3>
-          <p>Проєкт не закінчується деплоєм. Оновлення, фікси, нові фічі —
-             напряму зі мною, без тікет-систем і менеджерів.</p>
-        </article>
+      </div>
+      <div class="also" data-reveal data-reveal-delay="5">
+        <p class="also__label u-mono">Також</p>
+        <ul class="facts u-mono">
+          <li>Unity</li><li>Blender</li><li>Доробки наявних проєктів</li><li>Підтримка після запуску</li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- ═══ Проєкти ══════════════════════════════════════════════════════ -->
-  <section class="section" id="work">
+  <!-- ═══ 06 · Як замовити ═══════════════════════════════════════════ -->
+  <section class="section snap" id="how">
     <div class="u-container">
-      <p class="u-mono u-eyebrow" data-reveal>Проєкти</p>
-      <h2 class="section__title" data-reveal>Те, що вже працює</h2>
-
-      <div class="grid grid--2">
-        <article class="card proj" data-reveal>
-          <div class="proj__head">
-            <h3>TANO</h3>
-            <span class="proj__status">в онлайні</span>
-          </div>
-          <p>Discord-бот, що виріс в екосистему з п'ятнадцяти систем: AI, музика,
-             модерація на 12 команд, тікети, рівні, приватні войси, конструктор
-             повідомлень і node-редактор сценаріїв. Плюс власна веб-панель
-             керування сервером.</p>
-          <div class="proj__links">
-            <a href="https://tano.pp.ua/" target="_blank" rel="noopener">tano.pp.ua ↗</a>
-            <a href="https://taiyo.is-a.dev/tano/" target="_blank" rel="noopener">кейс ↗</a>
-          </div>
-        </article>
-
-        <article class="card proj" data-reveal>
-          <div class="proj__head">
-            <h3>Сайт ФТЛ</h3>
-            <span class="proj__status">в онлайні</span>
-          </div>
-          <p>Івано-Франківський науковий фізико-технічний ліцей. Перенесення
-             застарілого сайту на Joomla у сучасну статику — швидку, адаптивну,
-             без CMS-навантаження.</p>
-          <div class="proj__links">
-            <a href="https://ftl.if.ua" target="_blank" rel="noopener">ftl.if.ua ↗</a>
-            <a href="https://taiyo.is-a.dev/ftl/" target="_blank" rel="noopener">кейс ↗</a>
-          </div>
-        </article>
-
-        <article class="card proj" data-reveal>
-          <div class="proj__head">
-            <h3>Інтерактивні презентації</h3>
-            <span class="proj__status">на замовлення</span>
-          </div>
-          <p>Доповіді, що працюють у браузері без інтернету. Приклад —
-             «Play, Emotions &amp; AI» для UATEFL Lviv 2026. Замовниця —
-             Olena Kobzar, публікується за її згодою.</p>
-          <div class="proj__links">
-            <a href="https://taiyo.is-a.dev/decks/" target="_blank" rel="noopener">кейс ↗</a>
-          </div>
-        </article>
-
-        <article class="card proj" data-reveal>
-          <div class="proj__head">
-            <h3>Портфоліо</h3>
-            <span class="proj__status">в онлайні</span>
-          </div>
-          <p>Особиста сторінка з детальними кейсами кожного проєкту — як воно
-             будувалось, з чого складається і що всередині.</p>
-          <div class="proj__links">
-            <a href="https://taiyo.is-a.dev/" target="_blank" rel="noopener">taiyo.is-a.dev ↗</a>
-          </div>
-        </article>
+      <p class="u-mono u-eyebrow" data-reveal>Порядок роботи</p>
+      <h2 class="section__title" data-reveal data-reveal-delay="1">Як у нас замовити</h2>
+      <div class="flow">
+        <div class="flow__step" data-reveal data-reveal-delay="1">
+          <span class="flow__num u-mono">01</span>
+          <h3>Пишете</h3>
+          <p>Discord, Telegram або пошта. Опишіть задачу як вийде — уточнити
+             деталі вже наша робота.</p>
+        </div>
+        <div class="flow__step" data-reveal data-reveal-delay="2">
+          <span class="flow__num u-mono">02</span>
+          <h3>Узгоджуємо</h3>
+          <p>Обсяг, строк і ціна фіксуються до старту. Без «зробимо — потім
+             порахуємо».</p>
+        </div>
+        <div class="flow__step" data-reveal data-reveal-delay="3">
+          <span class="flow__num u-mono">03</span>
+          <h3>Робимо з показами</h3>
+          <p>Проміжні версії по ходу, а не один готовий результат у кінці.</p>
+        </div>
+        <div class="flow__step" data-reveal data-reveal-delay="4">
+          <span class="flow__num u-mono">04</span>
+          <h3>Запускаємо</h3>
+          <p>Деплой, домен, HTTPS. Далі — оновлення й фікси напряму
+             з розробником.</p>
+        </div>
       </div>
+      <p class="note" data-reveal data-reveal-delay="5">
+        Ціна залежить від обсягу, а не від прайс-листа: бот на три команди
+        і бот із веб-панеллю — різні роботи.
+        <strong>Напишіть, що потрібно, — назвемо строк і суму до початку.</strong>
+      </p>
     </div>
   </section>
 
-  <!-- ═══ Контакти ═════════════════════════════════════════════════════ -->
-  <section class="section section--soft" id="contact">
+  <!-- ═══ 07 · Контакти ══════════════════════════════════════════════ -->
+  <section class="section section--soft snap" id="contact">
     <div class="u-container">
       <p class="u-mono u-eyebrow" data-reveal>Контакти</p>
-      <h2 class="section__title" data-reveal>Як до нас звернутися</h2>
-      <p class="section__lead" data-reveal>
-        Напишіть будь-куди — відповідаю особисто. Розкажіть, що потрібно,
-        і я скажу, скільки це займе й коштуватиме.
+      <h2 class="section__title" data-reveal data-reveal-delay="1">Як до нас звернутися</h2>
+      <p class="section__lead" data-reveal data-reveal-delay="2">
+        Пишіть у будь-який канал — відповідає розробник, не менеджер. Щоб перша
+        ж відповідь була по суті, згадайте: що потрібно, для чого і коли.
       </p>
-
       <ul class="tiles">
-        <li data-reveal><a class="tile" href="https://discord.com/invite/b8QpW8W6fR" target="_blank" rel="noopener">
+        <li><a class="tile" data-magnetic data-reveal data-reveal-delay="1"
+               href="https://discord.com/invite/b8QpW8W6fR" target="_blank" rel="noopener">
+          <span class="tile__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.009c.12.099.246.198.373.292a.077.077 0 0 1-.007.128c-.598.35-1.22.644-1.873.891a.077.077 0 0 0-.04.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.055c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.029ZM8.02 15.331c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.211 0 2.176 1.095 2.157 2.419 0 1.333-.956 2.419-2.157 2.419Zm7.975 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.211 0 2.176 1.095 2.157 2.419 0 1.333-.946 2.419-2.157 2.419Z"/></svg></span>
           <span class="tile__label">Discord-сервер</span>
-          <span class="tile__meta">спільнота та підтримка</span>
+          <span class="tile__meta u-muted">Спільнота та підтримка TANO</span>
+          <span class="tile__arrow" aria-hidden="true">↗</span>
         </a></li>
-        <li data-reveal><a class="tile" href="https://discord.com/users/1081494299205705738" target="_blank" rel="noopener">
+
+        <li><a class="tile" data-magnetic data-reveal data-reveal-delay="2"
+               href="https://discord.com/users/1081494299205705738" target="_blank" rel="noopener">
+          <span class="tile__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
           <span class="tile__label">Discord</span>
-          <span class="tile__meta">iamtaiyo</span>
+          <span class="tile__meta u-muted">Особисті повідомлення</span>
+          <span class="tile__arrow" aria-hidden="true">↗</span>
         </a></li>
-        <li data-reveal><a class="tile" href="https://t.me/iamtaiyo" target="_blank" rel="noopener">
+
+        <li><a class="tile" data-magnetic data-reveal data-reveal-delay="3"
+               href="https://t.me/iamtaiyo" target="_blank" rel="noopener">
+          <span class="tile__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></span>
           <span class="tile__label">Telegram</span>
-          <span class="tile__meta">@iamtaiyo</span>
+          <span class="tile__meta u-muted">@iamtaiyo</span>
+          <span class="tile__arrow" aria-hidden="true">↗</span>
         </a></li>
-        <li data-reveal><a class="tile" href="mailto:dankob2011@gmail.com">
+
+        <li><a class="tile" data-magnetic data-reveal data-reveal-delay="4" href="mailto:dankob2011@gmail.com">
+          <span class="tile__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 6.5 9 6.5 9-6.5"/></svg></span>
           <span class="tile__label">Пошта</span>
-          <span class="tile__meta">dankob2011@gmail.com</span>
+          <span class="tile__meta u-muted">dankob2011@gmail.com</span>
+          <span class="tile__arrow" aria-hidden="true">→</span>
         </a></li>
       </ul>
     </div>
@@ -224,17 +352,16 @@
       <p class="footer__meta u-mono">spbt.pp.ua · Україна · 2026</p>
     </div>
     <nav class="footer__nav" aria-label="Навігація у футері">
-      <a href="#services">Послуги</a>
-      <a href="#work">Проєкти</a>
+      <a href="#work">Що вже працює</a>
+      <a href="#order">Замовлення</a>
       <a href="#contact">Контакти</a>
-      <a href="https://taiyo.is-a.dev/" target="_blank" rel="noopener">Портфоліо ↗</a>
-      <a href="https://tano.pp.ua/" target="_blank" rel="noopener">TANO ↗</a>
+      <a href="https://taiyo.is-a.dev/" target="_blank" rel="noopener">Портфоліо <span aria-hidden="true">↗</span></a>
+      <a href="https://tano.pp.ua/" target="_blank" rel="noopener">TANO <span aria-hidden="true">↗</span></a>
     </nav>
     <p class="footer__powered">
       Powered by <strong>SPBT</strong> <span>&copy;2025-2026</span>
     </p>
   </div>
 </footer>
-
 </body>
 </html>

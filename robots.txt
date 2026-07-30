@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+# .nojekyll means Pages serves every tracked file verbatim, so the repo's own
+# files are fetchable too. They are not pages and have no business in an index.
+Disallow: /tools/
+Disallow: /README.md
 
 Sitemap: https://spbt.pp.ua/sitemap.xml

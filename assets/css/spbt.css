@@ -1,0 +1,146 @@
+/* ═══ SPBT-only components ═══════════════════════════════════════════════
+   base.css, layout.css and components.css are byte-identical copies of the
+   portfolio's (taiyo.is-a.dev) — same tokens, same navbar, same slide engine,
+   same cards and tiles. Keeping them identical means a fix made on one site
+   can be copied to the other without a diff to reconcile, so everything this
+   site needs *in addition* lives here instead of being merged into them.  */
+
+/* A domain must not break at its own hyphen: "taiyo.is-" / "a.dev" across two
+   lines reads as two different strings. Opt-in per element, not a blanket rule
+   on `strong`, so a genuinely long emphasis can still wrap. */
+.u-nb{white-space:nowrap;}
+
+/* ─── Hero mark ────────────────────────────────────────────────────────
+   Mirrors `#hero-glyph` from components.css: the wrapper (`.glyph-card`)
+   supplies the square box and the bloom, the canvas fills it. Only the id
+   differs, because the subject is the brand mark rather than a `</>`.    */
+#hero-mark{position:absolute;inset:0;width:100%;height:100%;}
+
+/* Nothing about the hero headline lives here. The `background-clip:text` trap
+   it used to need a fix for — above 1040px the copy column shrinks while
+   --step-4 keeps growing, so the accent line ran past its box and, having no
+   background out there, vanished — turned out to hit both sites with the same
+   numbers. The fix is therefore in the shared layout.css, next to the nowrap
+   rule that causes it, and this note only exists so nobody looks for it here. */
+
+/* ─── Offer cards ──────────────────────────────────────────────────────
+   The 230px floor on `.card--skill` exists to level a multi-column row, but
+   CSS grid already stretches every card in a row to the tallest. On a
+   viewport-height slide it only steals room the heading and the "також" strip
+   need — measured 35px per row of cards on a 800px-tall screen. */
+.cards--offer .card--skill{min-height:0;}
+
+/* Four explicit columns wherever the slide layout is in charge. `auto-fit` with
+   a 240px floor needs 1020px of container for four tracks, and the container is
+   1001px at a 1041px viewport — so the whole 901–1096px band fell to three
+   columns plus one orphan on a second row, and the slide grew 240px past the
+   screen. Narrower cards are taller than wide ones, but a taller card costs far
+   less height than an extra row. */
+@media (min-width:901px){
+  .cards--offer{grid-template-columns:repeat(4,minmax(0,1fr));}
+}
+
+/* ─── "Also" strip ─────────────────────────────────────────────────────
+   Unity, Blender and support work are real, but they are not what this page
+   is selling — so they get one quiet line under the four offers instead of
+   cards of their own. The dot-separated list is `.facts` from components.css;
+   this only supplies the rule above it and the label. */
+.also{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:calc(var(--space)*1.5) calc(var(--space)*3);
+  margin-top:calc(var(--space)*5);
+  padding-top:calc(var(--space)*3);
+  border-top:1px solid var(--border);
+}
+.also__label{margin:0;color:var(--green);}
+.also .facts{margin-top:0;}
+
+/* ─── Ordering flow ────────────────────────────────────────────────────
+   Four steps, each one segment of a progress rule. The rule is per-step, not
+   a single line drawn across the row: `auto-fit` wraps this grid to two rows
+   and then one, and a spanning rail would either break at the wrap or have to
+   be redrawn per breakpoint. Segments wrap correctly by construction. */
+.flow{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));
+  gap:calc(var(--space)*4) calc(var(--space)*3);
+}
+.flow__step{
+  position:relative;
+  padding-top:calc(var(--space)*3.5);
+}
+.flow__step::before{
+  content:'';
+  position:absolute;
+  inset:0 0 auto 0;
+  height:2px;
+  border-radius:2px;
+  background:var(--border);
+  transition:background .45s var(--ease);
+}
+.flow__step:hover::before{
+  background:linear-gradient(90deg,var(--green),var(--green-hi));
+}
+.flow__num{
+  display:block;
+  color:var(--green);
+  opacity:.7;
+  letter-spacing:.2em;
+  margin-bottom:calc(var(--space)*1.25);
+}
+.flow__step h3{font-size:var(--step-0);margin-bottom:calc(var(--space)*1);}
+.flow__step p{margin:0;color:var(--muted);font-size:.94rem;line-height:1.7;}
+
+/* ─── Aside note ───────────────────────────────────────────────────────
+   Same visual as `.credit` on the portfolio's case pages, minus the mono
+   tracking: that one wraps a one-line credit in `.u-mono`, and .1em spacing
+   on a real sentence reads as a caption rather than as prose. */
+.note{
+  margin-top:calc(var(--space)*5);
+  padding:calc(var(--space)*2.5) calc(var(--space)*3.5);
+  border-left:2px solid var(--green);
+  background:var(--green-soft);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  max-width:70ch;
+  color:var(--text);
+}
+.note strong{color:var(--green-hi);}
+
+/* ─── Teaser inside a project panel ────────────────────────────────────
+   `.teaser__shot` and `.teaser__state` were written for the portfolio's
+   two-column `.teaser` block, where the copy column is a flex container and
+   supplies the gap between them. Here the shot stands alone inside
+   `.pj__visual`, which is a plain block, so the caption needs its own space —
+   without this it sits flush against the frame's bottom border. The frame's
+   proportions come from the image's own width/height attributes; nothing here
+   locks a ratio.
+
+   The stamp is scaled up because the frame is wider here than in the
+   portfolio's teaser column — but only from 561px up. Below that,
+   components.css shrinks the stamp to 1.05 and hides half its words so it
+   cannot be sliced by a narrow frame, and that guard is a single class:
+   a descendant selector here would silently outrank it. */
+.pj__visual .teaser__state{margin-top:calc(var(--space)*2);}
+@media (min-width:561px){
+  .pj__visual .teaser__mark{transform:rotate(-18deg) scale(1.15);}
+}
+
+/* ─── Stacked project panels ───────────────────────────────────────────
+   Below 760px (and with reduced motion at any width) the track stops being
+   horizontal and the three panels become ordinary stacked sections. They
+   carry no padding of their own — the 100svh floor used to supply the space —
+   so stacked they would touch, with one panel's contacts button against the
+   next panel's eyebrow. `.section` gets this from layout.css; `.pjslide`,
+   being its own thing, has to be told. */
+@media (max-width:759px){
+  .pjslide{padding:calc(var(--space)*7) 0;}
+}
+@media (prefers-reduced-motion:reduce){
+  .pjslide{padding:calc(var(--space)*7) 0;}
+}
+
+@media (max-width:900px){
+  .also{gap:calc(var(--space)*1) calc(var(--space)*2);}
+}
