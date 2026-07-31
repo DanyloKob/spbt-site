@@ -25,7 +25,7 @@ assets/
   img/                favicon, og, банер TANO, знімки кейсів
   fonts/*.woff2       Unbounded, Manrope, JetBrains Mono (самохост)
 tools/
-  check.test.mjs      18 тестів: node --test tools/check.test.mjs
+  check.test.mjs      22 тести: node --test tools/check.test.mjs
   check.mjs           хелпери до тестів (палітра, дозволені хости)
   serve.mjs           локальний сервер на :4173
   shot.mjs            скріншоти через CDP

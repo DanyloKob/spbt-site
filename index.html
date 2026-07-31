@@ -12,7 +12,7 @@
     document.documentElement.classList.add('js-stalled');
   }, 2500);
 </script>
-<title>SPBT</title>
+<title>SPBT — Discord-боти, сайти та презентації на замовлення</title>
 <meta name="description" content="SPBT (Small Projects by Taiyo) — Discord-боти з веб-панелями, сайти під ключ, бекенд та інтерактивні презентації на замовлення. Дивіться, що вже працює, і пишіть напряму розробнику.">
 <meta name="author" content="Taiyo Asano">
 <meta name="theme-color" content="#050807">
@@ -71,9 +71,11 @@
           <span class="u-outline" data-reveal data-reveal-delay="2">живий продакшн</span>
         </h1>
         <!-- Раніше тут стояло «усе, що на цій сторінці, вже працює» — і сама
-             ж сторінка це заперечувала: сайт школи тричі позначений як
-             «у розробці». Обіцянка, яку власний текст поруч спростовує, шкодить
-             більше, ніж скромніше формулювання. -->
+             ж сторінка це заперечувала: сайт школи був позначений як
+             «у розробці» у трьох місцях. Тепер таке позначення одне — клауза
+             в ліді панелі «Сайти під ключ», — але правило лишається: обіцянка,
+             яку власний текст поруч спростовує, шкодить більше за скромніше
+             формулювання. -->
         <p class="hero__lead" data-reveal data-reveal-delay="1">
           Discord-боти з веб-панелями, сайти під ключ, бекенд та інтерактивні
           презентації. Не концепти й не демо: те, що вже запущено, працює на
@@ -103,7 +105,16 @@
        вертикальної прокрутки. Скрол лишається нативним — скролбар, клавіші
        й пошук по сторінці працюють. Три невидимі якорі дають по одній
        snap-точці на панель.                                           -->
-  <section class="pjtrack" id="work" data-pjtrack>
+  <section class="pjtrack" id="work" aria-labelledby="work-title" data-pjtrack>
+    <!-- Заголовок секції, який не займає жодного пікселя. `.u-sr`
+         (base.css:195) — це position:absolute, тож sticky-сцена, три якорі
+         й прогрес доріжки лишаються рівно там, де були.
+         Видимий заголовок усередину сцени без нового CSS не ставиться: рядок
+         має height:100%, а сцена — overflow:clip, тому будь-який блок у потоці
+         зсуває панелі вниз рівно на свою висоту й стільки ж зрізає знизу, ще й
+         ховається під фіксовану шапку (сцена стоїть top:0). Видиме обрамлення
+         несуть надрядки панелей; `.pjtrack__hint` повторює назву секції. -->
+    <h2 class="u-sr" id="work-title">Що вже працює</h2>
     <span class="pjtrack__anchor pjtrack__anchor--1" aria-hidden="true"></span>
     <span class="pjtrack__anchor pjtrack__anchor--2" aria-hidden="true"></span>
     <span class="pjtrack__anchor pjtrack__anchor--3" aria-hidden="true"></span>
@@ -114,8 +125,8 @@
         <article class="pjslide pj" id="tano">
           <div class="u-container pj__inner">
             <div class="pj__copy">
-              <p class="u-mono u-eyebrow" data-reveal>Працює зараз — 01</p>
-              <h2 class="pj__title" data-reveal data-reveal-delay="1">TANO</h2>
+              <p class="u-mono u-eyebrow" data-reveal>Працює зараз — 01 / 03</p>
+              <h3 class="pj__title" data-reveal data-reveal-delay="1">TANO</h3>
               <p class="pj__lead" data-reveal data-reveal-delay="2">
                 Discord-бот, який виріс в екосистему: модерація, тікети, рівні,
                 музика, приватні войси, AI, конструктор повідомлень і власна
@@ -131,7 +142,18 @@
                 <li>AI</li><li>Музика</li><li>Модерація</li><li>Тікети</li><li>Веб-панель</li>
               </ul>
               <div class="card__actions" data-reveal data-reveal-delay="5">
-                <a class="btn btn--primary" data-magnetic href="https://tano.pp.ua/" target="_blank" rel="noopener">tano.pp.ua <span aria-hidden="true">↗</span></a>
+                <!-- Зелена кнопка на кожній панелі доказу веде всередину, на
+                     #contact. Досі всі три були зовнішніми: сторінка, яка
+                     продає, найгучнішою кнопкою відправляла відвідувача геть.
+                     Доказ лишився поруч, просто вторинним.
+                     Підпис короткий («Замовити», як у шапці й у героя): з
+                     довшим три кнопки міряються ~503px проти ~458px колонки
+                     тексту на 901px і переносяться у другий рядок, а панель
+                     тут вирости не може — вона height:100% усередині сцени
+                     з overflow:clip, тож зайвий рядок зрізається, а не
+                     прокручується. -->
+                <a class="btn btn--primary" data-magnetic href="#contact">Замовити <span aria-hidden="true">→</span></a>
+                <a class="btn" data-magnetic href="https://tano.pp.ua/" target="_blank" rel="noopener">tano.pp.ua <span aria-hidden="true">↗</span></a>
                 <!-- aria-label, бо на сторінці два посилання з текстом «Кейс»:
                      у списку посилань екранного читача вони були б нерозрізненні.
                      Видимий текст входить у назву, тому керування голосом
@@ -149,35 +171,66 @@
         <article class="pjslide pj" id="sites">
           <div class="u-container pj__inner">
             <div class="pj__copy">
-              <p class="u-mono u-eyebrow" data-reveal>Працює зараз — 02</p>
-              <h2 class="pj__title" data-reveal data-reveal-delay="1">Сайти під ключ</h2>
+              <p class="u-mono u-eyebrow" data-reveal>Працює зараз — 02 / 03</p>
+              <h3 class="pj__title" data-reveal data-reveal-delay="1">Сайти під ключ</h3>
+              <!-- Один рядок, не два, і це виміряно, а не на око. Панель
+                   стоїть у сцені з overflow:clip, і в смузі 760-900px при
+                   висоті вікна 700px ряд кнопок зрізало: 27px ще до смужки
+                   цифр, 51px разом із нею. Кожен рядок ліда коштує 34px, тож
+                   однорядковий варіант дає 17px — тобто панель тут краща, ніж
+                   була до правки. Прибрана фраза «Цифри — про цю сторінку»
+                   не потрібна: антецедент дає табличка `spbt / .pp.ua` у
+                   сусідній колонці, вона й називає, про яку сторінку числа.
+                   Клауза про сайт школи лишається — на ній тримається
+                   обіцянка героя «те, що в роботі, так і підписано». -->
               <p class="pj__lead" data-reveal data-reveal-delay="2">
-                Верстка, бекенд, домен, HTTPS, деплой. Живі приклади —
-                <strong class="u-nb">taiyo.is-a.dev</strong> і сторінка, яку ви читаєте:
-                статика без фреймворків, самохостні шрифти, нуль залежностей.
-                У роботі — сайт школи: оновлюємо дизайн.
+                Верстка, бекенд, домен, HTTPS, деплой. У роботі — сайт школи.
               </p>
-              <ul class="chips u-mono" data-reveal data-reveal-delay="3">
+              <!-- Хвіст абзацу («статика без фреймворків, самохостні шрифти,
+                   нуль залежностей») переїхав у цифри: те саме твердження, але
+                   його видно за пів секунди. Кожне число перевіряється однією
+                   дією:
+                     0  — у репозиторії немає ні package.json, ні lock-файла,
+                          ні node_modules, і жодного зовнішнього хоста;
+                     22 — стільки тестів проходить tools/check.test.mjs;
+                     3  — Unbounded, Manrope, JetBrains Mono: три РОДИНИ
+                          у 14 блоках @font-face. Файлів .woff2 теж 14, тому
+                          підпис говорить про родини, а не про «шрифти» —
+                          інакше число суперечило б власній теці assets/fonts.
+                   Абзац більше не називає taiyo.is-a.dev: там свій набір
+                   тестів (20), і два різні числа під однаковим підписом
+                   «Тестів» на двох сайтах, які лінкують один на одного,
+                   читалися б як помилка, а не як спільний шаблон. Приклад
+                   лишився кнопкою нижче.
+                   Абзац скорочено з чотирьох рядків до двох саме тому, що
+                   смужка коштує фіксовані 78px (58px `.stats` + 20px проміжку
+                   `.pj__copy`), і викинути з неї один пункт не економить
+                   нічого: `.stats` — один flex-рядок. Платять тільки рядки
+                   абзацу, ~35px кожен. -->
+              <dl class="stats" data-reveal data-reveal-delay="3">
+                <div><dt class="u-mono">Залежностей</dt><dd data-counter="0">0</dd></div>
+                <div><dt class="u-mono">Тестів</dt><dd data-counter="22">22</dd></div>
+                <div><dt class="u-mono">Родин шрифтів</dt><dd data-counter="3">3</dd></div>
+              </dl>
+              <ul class="chips u-mono" data-reveal data-reveal-delay="4">
                 <li>Статика</li><li>Node.js</li><li>GitHub Pages</li><li>Власний сервер</li><li>Адаптив</li>
               </ul>
-              <div class="card__actions" data-reveal data-reveal-delay="4">
-                <a class="btn btn--primary" data-magnetic href="https://taiyo.is-a.dev/" target="_blank" rel="noopener">taiyo.is-a.dev <span aria-hidden="true">↗</span></a>
+              <div class="card__actions" data-reveal data-reveal-delay="5">
+                <a class="btn btn--primary" data-magnetic href="#contact">Замовити сайт <span aria-hidden="true">→</span></a>
+                <a class="btn" data-magnetic href="https://taiyo.is-a.dev/" target="_blank" rel="noopener">taiyo.is-a.dev <span aria-hidden="true">↗</span></a>
               </div>
             </div>
-            <!-- Знімок навмисно розмитий і під водяним знаком: проєкт не
-                 запущено, а показувати чужу сторінку до релізу — не наше право.
-                 Ні назви закладу, ні подробиць тут теж немає. Розмиття та штамп
-                 накладені CSS-ом, сам файл недоторканий, тому на запуску це
-                 знімається одним рядком. -->
-            <div class="pj__visual" data-reveal data-reveal-delay="2">
-              <div class="teaser__shot">
-                <img src="/assets/img/ftl-shot.jpg" width="1100" height="688" loading="lazy"
-                     alt="Розмитий фрагмент майбутнього сайту школи під водяним знаком «скоро»">
-                <span class="teaser__mark" aria-hidden="true">
-                  <i>СКОРО</i><i>СКОРО</i><i>СКОРО</i><i>СКОРО</i><i>СКОРО</i><i>СКОРО</i>
-                </span>
-              </div>
-              <p class="u-mono teaser__state">Сайт школи — у розробці</p>
+            <!-- Знімок сайту школи звідси прибрано. Панель має надрядок
+                 «Працює зараз», а найбільшим об'єктом у ній був проєкт зі
+                 штампом «СКОРО»: картинка спростовувала власний підпис.
+                 Про незапущений проєкт тут сказано рівно стільки, скільки
+                 стоїть у ліді вище, тому місце тримає типографічна табличка
+                 з components.css — те саме рішення, яким портфоліо закриває
+                 проєкти без знімка, що його варто показувати.
+                 Файл ftl-shot.jpg лишається в assets/img до дня запуску. -->
+            <div class="pj__visual pj__visual--type" data-reveal data-reveal-delay="2" aria-hidden="true">
+              <span class="pj__wordmark">spbt</span>
+              <span class="pj__wordsub u-mono">.pp.ua</span>
             </div>
           </div>
         </article>
@@ -185,20 +238,44 @@
         <article class="pjslide pj" id="decks">
           <div class="u-container pj__inner">
             <div class="pj__copy">
-              <p class="u-mono u-eyebrow" data-reveal>Працює зараз — 03</p>
-              <h2 class="pj__title" data-reveal data-reveal-delay="1">Інтерактивні презентації</h2>
+              <p class="u-mono u-eyebrow" data-reveal>Працює зараз — 03 / 03</p>
+              <h3 class="pj__title" data-reveal data-reveal-delay="1">Інтерактивні презентації</h3>
               <p class="pj__lead" data-reveal data-reveal-delay="2">
-                Доповідь як один HTML-файл: вшиті шрифти, робота без інтернету,
-                керування пультом, інтерактивні слайди. Приклад — «Play, Emotions
-                &amp; AI» для UATEFL Conference Lviv 2026. Замовниця — Olena Kobzar.
-                Матеріали публікуються за її згодою.
+                Доповідь, керована пультом. «Play, Emotions &amp; AI» для
+                UATEFL Lviv 2026 — на замовлення Olena Kobzar, за її згодою.
               </p>
-              <ul class="chips u-mono" data-reveal data-reveal-delay="3">
+              <!-- З абзацу прибрано лише те, що вже стоїть поруч: «вшиті
+                   шрифти» й «один файл» — це чипи нижче, «інтерактивні
+                   слайди» — це заголовок самої панелі. Абзац тримає привід,
+                   пульт (чипа для нього немає) і згоду замовниці, прибирати
+                   яку не можна.
+                   Числа — з кейсу, який ця панель і відкриває,
+                   taiyo.is-a.dev/decks/: «Десять слайдів, близько вісімнадцяти
+                   хвилин, два інтерактивні моменти із залом». Хвилини сюди не
+                   пішли саме тому, що вони «близько»: смужка показує точні
+                   величини, і одна приблизна навчила б читати всі як
+                   приблизні.
+                   У «Файлів» і «Моментів» немає data-counter навмисно:
+                   motion.js обнуляє вміст і їде вгору, тож ціль 1 показує «0»
+                   перші ~140 мс, а ціль 2 — перші ~58 мс. Це рівно протилежне
+                   твердження під власним підписом. Правило одне для обох.
+                   Абзац скорочено з чотирьох рядків до двох, бо смужка коштує
+                   фіксовані 78px, а викинути з неї пункт не економить нічого:
+                   `.stats` — один flex-рядок. -->
+              <dl class="stats" data-reveal data-reveal-delay="3">
+                <div><dt class="u-mono">Файлів</dt><dd>1</dd></div>
+                <div><dt class="u-mono">Слайдів</dt><dd data-counter="10">10</dd></div>
+                <div><dt class="u-mono">Моментів із залом</dt><dd>2</dd></div>
+              </dl>
+              <ul class="chips u-mono" data-reveal data-reveal-delay="4">
                 <li>Один файл</li><li>Офлайн</li><li>Вшиті шрифти</li><li>Гайд для доповідача</li>
               </ul>
-              <div class="card__actions" data-reveal data-reveal-delay="4">
-                <a class="btn btn--primary" data-magnetic href="https://taiyo.is-a.dev/decks/" target="_blank" rel="noopener" aria-label="Кейс презентації">Кейс <span aria-hidden="true">↗</span></a>
-                <a class="btn" data-magnetic href="#order">Замовити <span aria-hidden="true">→</span></a>
+              <div class="card__actions" data-reveal data-reveal-delay="5">
+                <!-- Було «#order» — тобто назад, на слайд із переліком послуг.
+                     «Замовити» на цій сторінці має вести в одне місце, і це
+                     #contact, як у шапці й у героя. -->
+                <a class="btn btn--primary" data-magnetic href="#contact">Замовити презентацію <span aria-hidden="true">→</span></a>
+                <a class="btn" data-magnetic href="https://taiyo.is-a.dev/decks/" target="_blank" rel="noopener" aria-label="Кейс презентації">Кейс <span aria-hidden="true">↗</span></a>
               </div>
             </div>
             <div class="pj__visual" data-reveal data-reveal-delay="2">
@@ -213,15 +290,15 @@
       <div class="pjtrack__dots" data-pjdots aria-hidden="true">
         <span class="is-on"></span><span></span><span></span>
       </div>
-      <p class="pjtrack__hint u-mono" aria-hidden="true">Гортайте — проєкти йдуть убік</p>
+      <p class="pjtrack__hint u-mono" aria-hidden="true">Що вже працює — гортайте убік</p>
     </div><!-- /.pjtrack__stage -->
   </section>
 
   <!-- ═══ 05 · Що можна замовити ═════════════════════════════════════ -->
-  <section class="section section--soft snap" id="order">
+  <section class="section section--soft snap" id="order" aria-labelledby="order-title">
     <div class="u-container">
       <p class="u-mono u-eyebrow" data-reveal>Замовлення</p>
-      <h2 class="section__title" data-reveal data-reveal-delay="1">Що можна замовити</h2>
+      <h2 class="section__title" id="order-title" data-reveal data-reveal-delay="1">Що можна замовити</h2>
       <p class="section__lead" data-reveal data-reveal-delay="2">
         Чотири речі, які ми робимо регулярно й доводимо до запуску.
       </p>
@@ -260,7 +337,76 @@
     </div>
   </section>
 
-  <!-- ═══ 06 · Як замовити ═══════════════════════════════════════════ -->
+  <!-- ═══ 06 · Скільки це коштує ═════════════════════════════════════
+       Окремий слайд, а не рядок у кожній картці #order. Дві причини.
+       Зміст: чотири картки не лягають на три цінові щаблі — презентація
+       й сайт коштують однаково, а бот не має суми взагалі, — тож у картку
+       довелося б або вигадати цифру, або лишити порожнє місце. Висота:
+       #order і так не влазить у слайд (виміряно 866px контенту у вікні
+       901×800), і ще один рядок у кожній картці лише поглибив би це.
+       Цей слайд у смузі обов'язкового snap (901px і ширше) тримається
+       697-800px: нижчий за #order на кожній ширині, але НЕ найнижчий —
+       #how коротший за нього від ~950px.
+
+       У `.pairs` рівно три елементи, і це не смак: три треки просять
+       3×260 + 2×20 = 820px, а найвужчий контейнер у snap-режимі (вікно
+       901px) дає 861px. Четвертий розсипав би ряд на 3+1 — та сама
+       поломка, яку карткам #order довелося лікувати медіазапитом, а тут
+       нового CSS немає.
+
+       `.facts` у смужці підтримки мусить лишатися одним рядком. З довшим
+       третім пунктом він переносився у смузі 931-1015px, `.also` росла
+       з 45px до 113px — і слайд ставав 804px у вікні 800px, тобто
+       оверфлоу всередині mandatory-snap. Бюджет: мітка плюс проміжок
+       коштують ~204px, отже на `.facts` лишається ~657px із 861px.
+       Смуга 901-1015px — саме та, що не потрапила у першу вибірку
+       вимірювань; 1024 і 1140 цієї поломки не показують.       -->
+  <section class="section snap" id="price">
+    <div class="u-container">
+      <p class="u-mono u-eyebrow" data-reveal>Строки й суми</p>
+      <h2 class="section__title" data-reveal data-reveal-delay="1">Скільки це коштує</h2>
+      <p class="section__lead" data-reveal data-reveal-delay="2">
+        Це орієнтир, а не рахунок. Точні цифри — після опису задачі.
+      </p>
+      <!-- Тег — <div>, а не <p>. У components.css `.pair p` (рядок 469) це
+           клас плюс тип, тобто вага вища за сам `.pair__tag` (рядок 470), і
+           він забирає в нього і колір, і нижній відступ: зелена сума стала б
+           сірою й злиплася б із заголовком. Той самий капкан уже спрацював
+           на портфоліо, де `.tl__year` лежить у <p> усередині `.tl__node`. -->
+      <ul class="pairs">
+        <li class="pair" data-reveal data-reveal-delay="1">
+          <div class="pair__tag u-mono">$1-5</div>
+          <h3>Сайт, презентація, модель</h3>
+          <p>Звичайна презентація або легка 3D-модель — 2-5 днів. Звичайний
+             сайт під ключ — 4-7.</p>
+        </li>
+        <li class="pair" data-reveal data-reveal-delay="2">
+          <div class="pair__tag u-mono">$50-100</div>
+          <h3>Сайт із діями та панеллю</h3>
+          <p>Вхід, база даних, керування зсередини. Строк називаємо
+             після опису задачі.</p>
+        </li>
+        <li class="pair" data-reveal data-reveal-delay="3">
+          <div class="pair__tag u-mono">За обсягом</div>
+          <h3>Бот або основа на Unity</h3>
+          <p>До місяця. Готової цифри тут немає — рахуємо від кількості
+             модулів.</p>
+        </li>
+      </ul>
+      <!-- Підтримка — інший товар, ніж збірка: вона щомісячна й не має
+           «готово». Тому не четвертий .pair, а той самий тихий рядок
+           `.also`, яким під картками #order уже позначено «це теж є, але
+           це не те, що ми продаємо». -->
+      <div class="also" data-reveal data-reveal-delay="4">
+        <p class="also__label u-mono">Підтримка щомісяця</p>
+        <ul class="facts u-mono">
+          <li>Легкий сайт — $10-20</li><li>Великий — $50</li><li>Сервер, домен, фікси</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 07 · Як замовити ═══════════════════════════════════════════ -->
   <section class="section snap" id="how">
     <div class="u-container">
       <p class="u-mono u-eyebrow" data-reveal>Порядок роботи</p>
@@ -298,14 +444,35 @@
     </div>
   </section>
 
-  <!-- ═══ 07 · Контакти ══════════════════════════════════════════════ -->
+  <!-- ═══ 08 · Контакти ══════════════════════════════════════════════ -->
   <section class="section section--soft snap" id="contact">
     <div class="u-container">
-      <p class="u-mono u-eyebrow" data-reveal>Контакти</p>
-      <h2 class="section__title" data-reveal data-reveal-delay="1">Як до нас звернутися</h2>
-      <p class="section__lead" data-reveal data-reveal-delay="2">
-        Пишіть у будь-який канал — відповідає розробник, не менеджер. Щоб перша
-        ж відповідь була по суті, згадайте: що потрібно, для чого і коли.
+      <p class="u-mono u-eyebrow" data-reveal>Контакти · відповідає розробник</p>
+      <h2 class="section__title" data-reveal data-reveal-delay="1">Напишіть нам</h2>
+      <!-- Ці ж питання стояли тут прозою («згадайте: що потрібно, для чого
+           і коли») і проблеми порожнього поля не знімали: прочитати перелік
+           і почати з нуля в Discord — це все одно почати з нуля. Тепер це
+           рядки, які виділяються, копіюються й дописуються; сіре — приклади
+           масштабу відповіді, їх замінюють, а не лишають.
+
+           Ліда немає, і рядків два, а не три. Слайд заввишки 100svh, а над
+           `.tiles` було рівно 33px запасу у вікні 1024×768: `.note` коштує
+           126px плюс 16px нижнього поля <p> (base.css:118 — spbt.css задає
+           їй лише margin-top), тоді як `.section__lead` віддає всього 61px.
+           Трирядковий варіант навіть без ліда міряється 780px при 1024×768,
+           тобто на 12px за екран; дворядковий — 751px і вміщується скрізь,
+           де вмикається mandatory-snap. Заголовок скорочувати марно: він і
+           з двадцяти символів лягав в один рядок, бо `.section__title` має
+           max-width:min(20ch,100%), а 20ch дисплейного шрифту ширші за
+           контейнер, тож обмеження не спрацьовує.
+
+           Обіцянка «назвемо строк і суму» вже стоїть слайдом вище, у `.note`
+           секції #how, тому лід нічого не втратив. Слово «скопіюйте» свідомо
+           не всередині блоку: усе, що там, потрапляє в буфер разом із
+           рядками. -->
+      <p class="note" data-reveal data-reveal-delay="2">
+        <strong>Що зробити:</strong> <span class="u-muted">бот, сайт, веб-панель, презентація</span><br>
+        <strong>Для кого і коли:</strong> <span class="u-muted">спільнота, малий бізнес · дата або «не горить»</span>
       </p>
       <ul class="tiles">
         <li><a class="tile" data-magnetic data-reveal data-reveal-delay="1"
@@ -353,6 +520,7 @@
     <nav class="footer__nav" aria-label="Навігація у футері">
       <a href="#work">Що вже працює</a>
       <a href="#order">Замовлення</a>
+      <a href="#price">Ціни й строки</a>
       <a href="#contact">Контакти</a>
       <a href="https://taiyo.is-a.dev/" target="_blank" rel="noopener">Портфоліо <span aria-hidden="true">↗</span></a>
       <a href="https://tano.pp.ua/" target="_blank" rel="noopener">TANO <span aria-hidden="true">↗</span></a>
