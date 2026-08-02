@@ -25,18 +25,39 @@ const PAGES = htmlFiles(ROOT);
 const CSS_FILES = ['base.css', 'layout.css', 'components.css', 'spbt.css'];
 const ORIGIN = 'https://spbt.pp.ua';
 
+/* The two language twins, and the document language each one must declare.
+   Written out rather than derived from the path: a third language added by
+   copy-paste has to be listed here, which is the moment to check that its
+   hreflang links and its sitemap entry came with it. */
+const LANG_OF = { 'index.html': 'uk', 'en/index.html': 'en', '404.html': 'uk' };
+
+/* The pages that carry the slide layout — one per language. 404.html is an
+   ordinary short document and is deliberately not one of them. */
+const SLIDE_PAGES = ['index.html', 'en/index.html'];
+
+/* A page's public URL. `/en/index.html` is served as `/en/`, so the mapping
+   cannot be a plain `${ORIGIN}/${page}` — that string is what canonical,
+   og:url and the sitemap all have to agree on. */
+function pageUrl(page) {
+  if (page === 'index.html') return `${ORIGIN}/`;
+  if (page.endsWith('/index.html')) return `${ORIGIN}/${page.slice(0, -'index.html'.length)}`;
+  return `${ORIGIN}/${page}`;
+}
+
 const css = (name) => readFileSync(join(ROOT, 'assets/css', name), 'utf8');
 const bundle = () => CSS_FILES.map(css).join('\n');
 
 test('the site has the pages it is supposed to have', () => {
-  assert.deepEqual(PAGES.sort(), ['404.html', 'index.html']);
+  assert.deepEqual(PAGES.sort(), ['404.html', 'en/index.html', 'index.html']);
 });
 
 test('every page declares charset, viewport, language and a title', () => {
   for (const page of PAGES) {
     const html = readHtml(page, ROOT);
     assert.match(html, /^<!doctype html>/i, `${page}: missing doctype`);
-    assert.match(html, /<html lang="uk"/, `${page}: missing lang="uk"`);
+    const lang = LANG_OF[page];
+    assert.ok(lang, `${page}: no expected document language recorded`);
+    assert.match(html, new RegExp(`<html lang="${lang}"`), `${page}: missing lang="${lang}"`);
     assert.match(html, /<meta charset="utf-8">/, `${page}: missing charset`);
     assert.match(html, /name="viewport"/, `${page}: missing viewport`);
     assert.match(html, /<title>[^<]+<\/title>/, `${page}: missing title`);
@@ -57,7 +78,7 @@ test('every page declares charset, viewport, language and a title', () => {
 test('the page identifies itself as SPBT, not as the portfolio', () => {
   for (const page of PAGES) {
     const html = readHtml(page, ROOT);
-    const want = page === 'index.html' ? `${ORIGIN}/` : `${ORIGIN}/${page}`;
+    const want = pageUrl(page);
     assert.equal(/property="og:url" content="([^"]+)"/.exec(html)?.[1], want, `${page}: og:url`);
     assert.equal(/property="og:site_name" content="([^"]+)"/.exec(html)?.[1], 'SPBT', `${page}: og:site_name`);
     for (const m of html.matchAll(/(?:og|twitter):(?:image|url)" content="([^"]+)"/g)) {
@@ -216,8 +237,9 @@ test('images stay inside their budget', () => {
   assert.ok(total <= 800_000, `images total ${Math.round(total / 1024)}KB (cap 800KB)`);
 });
 
-test('the snap layout is scoped to the slide page only', () => {
+test('the snap layout is scoped to the slide pages only', () => {
   assert.match(readHtml('index.html', ROOT), /<html lang="uk" class="slides">/);
+  assert.match(readHtml('en/index.html', ROOT), /<html lang="en" class="slides">/);
   assert.ok(
     !readHtml('404.html', ROOT).includes('class="slides"'),
     '404.html must not inherit mandatory snapping',
@@ -225,13 +247,74 @@ test('the snap layout is scoped to the slide page only', () => {
 });
 
 test('the project track has one snap anchor and one dot per panel', () => {
-  const html = readHtml('index.html', ROOT);
-  const panels = countClass(html, 'pjslide');
-  assert.ok(panels >= 2, `expected at least two panels, found ${panels}`);
-  assert.equal(countClass(html, 'pjtrack__anchor'), panels, 'anchor count must match panels');
-  const dots = html.match(/<div class="pjtrack__dots"[^>]*>([\s\S]*?)<\/div>/);
-  assert.ok(dots, 'the track has no dots container');
-  assert.equal((dots[1].match(/<span/g) ?? []).length, panels, 'dot count must match panels');
+  for (const page of SLIDE_PAGES) {
+    const html = readHtml(page, ROOT);
+    const panels = countClass(html, 'pjslide');
+    assert.ok(panels >= 2, `${page}: expected at least two panels, found ${panels}`);
+    assert.equal(countClass(html, 'pjtrack__anchor'), panels, `${page}: anchor count must match panels`);
+    const dots = html.match(/<div class="pjtrack__dots"[^>]*>([\s\S]*?)<\/div>/);
+    assert.ok(dots, `${page}: the track has no dots container`);
+    assert.equal((dots[1].match(/<span/g) ?? []).length, panels, `${page}: dot count must match panels`);
+  }
+});
+
+/* ─── The two language twins ────────────────────────────────────────────────
+   Everything below guards the pair, not a page. The failure these catch is
+   always the same shape: one twin is edited, the other is not, and nothing
+   visibly breaks — the pages simply stop being the same page in two
+   languages, which is what every hreflang annotation on them claims. */
+
+test('both language twins annotate the whole set with hreflang', () => {
+  for (const page of SLIDE_PAGES) {
+    const html = readHtml(page, ROOT);
+    assert.ok(html.includes(`rel="canonical" href="${pageUrl(page)}"`), `${page}: canonical must be ${pageUrl(page)}`);
+    assert.match(html, /hreflang="uk" href="https:\/\/spbt\.pp\.ua\/"/, `${page}: uk alternate`);
+    assert.match(html, /hreflang="en" href="https:\/\/spbt\.pp\.ua\/en\/"/, `${page}: en alternate`);
+    /* x-default is the Ukrainian page: it is what a visitor with no matching
+       language gets, and what the router below falls back to. */
+    assert.match(html, /hreflang="x-default" href="https:\/\/spbt\.pp\.ua\/"/, `${page}: x-default alternate`);
+  }
+});
+
+test('both twins carry the same anchors, so either can be linked to', () => {
+  const uk = ids(readHtml('index.html', ROOT));
+  const en = ids(readHtml('en/index.html', ROOT));
+  assert.deepEqual(en, uk, 'the English page must carry exactly the Ukrainian ids');
+});
+
+test('the language capsule offers both languages and marks the current one', () => {
+  for (const page of SLIDE_PAGES) {
+    const html = readHtml(page, ROOT);
+    const capsule = /<div class="lang[^"]*"[\s\S]*?<\/div>/.exec(html);
+    assert.ok(capsule, `${page}: no language capsule in the bar`);
+    const markup = capsule[0];
+    assert.match(markup, /href="\/" data-lang="uk"/, `${page}: no link to the Ukrainian page`);
+    assert.match(markup, /href="\/en\/" data-lang="en"/, `${page}: no link to the English page`);
+    /* `.lang--en` is what slides the pill indicator across; without it the
+       English page highlights UA while showing English. */
+    const wantsSlide = LANG_OF[page] === 'en';
+    assert.equal(markup.includes('lang--en'), wantsSlide, `${page}: pill indicator on the wrong option`);
+    assert.equal((markup.match(/is-on/g) ?? []).length, 1, `${page}: exactly one option is current`);
+  }
+});
+
+/* The router is a redirect, and a redirect that runs on both twins is an
+   infinite loop. It belongs to the Ukrainian page alone — /en/ is a URL people
+   share, and it has to open in English on a Ukrainian browser. */
+test('only the Ukrainian page redirects, and it remembers an explicit choice', () => {
+  const uk = readHtml('index.html', ROOT);
+  assert.match(uk, /location\.replace\('\/en\/'/, 'index.html: no language routing');
+  assert.match(uk, /localStorage/, 'index.html: the choice is not remembered');
+  assert.ok(
+    !readHtml('en/index.html', ROOT).includes('location.replace'),
+    'en/index.html must never redirect: it is the page that shared links point at',
+  );
+  /* Inline in the head, not in the deferred module: site.js is type="module",
+     so a redirect from there would paint the wrong language first. */
+  assert.ok(
+    !readSource('assets/js/site.js', ROOT).includes('spbt-lang'),
+    'language routing must stay inline in the head, not move into the deferred module',
+  );
 });
 
 /* Byte-level, not `.trim()`. The committed CNAME really did start with a UTF-8
@@ -254,10 +337,21 @@ test('the crawler files agree with the pages that exist', () => {
   const sitemap = readFileSync(join(ROOT, 'sitemap.xml'), 'utf8');
   const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   const indexable = PAGES.filter((p) => !readHtml(p, ROOT).includes('name="robots" content="noindex"'));
-  const expected = indexable.map((p) => (p === 'index.html' ? `${ORIGIN}/` : `${ORIGIN}/${p}`));
+  const expected = indexable.map(pageUrl);
   assert.deepEqual(locs.sort(), expected.sort());
+
+  /* A sitemap that lists both languages but annotates neither is worse than
+     one that lists only the apex: it invites the crawler to treat the twins as
+     two competing pages. Every <url> block carries the full alternate set. */
+  const blocks = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((m) => m[1]);
+  assert.equal(blocks.length, expected.length, 'sitemap block count');
+  for (const block of blocks) {
+    for (const hl of ['uk', 'en', 'x-default']) {
+      assert.ok(block.includes(`hreflang="${hl}"`), `sitemap: a <url> block is missing hreflang="${hl}"`);
+    }
+  }
 });
 
-test('the canonical URL is the apex origin', () => {
+test('the canonical URL of the Ukrainian page is the apex origin', () => {
   assert.ok(readHtml('index.html', ROOT).includes(`rel="canonical" href="${ORIGIN}/"`));
 });

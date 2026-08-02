@@ -11,6 +11,54 @@
   window.__spbtFailsafe = setTimeout(function () {
     document.documentElement.classList.add('js-stalled');
   }, 2500);
+
+  /* ─── Language routing ──────────────────────────────────────────────────
+     Only this page routes. It is the x-default, so it is where a visitor with
+     no opinion lands, and /en/ has to stay put — a shared /en/ link must open
+     in English on any browser.
+
+     Order of authority: an explicit click on the UA/EN capsule (remembered
+     here, in the same handler, so the write lands before the link navigates)
+     beats the browser's languages, which beat "stay". Without the memory the
+     two pages would ping-pong: a Ukrainian speaker on an English browser
+     clicks UA, arrives here, and gets sent straight back. The same-origin
+     referrer check is the fallback for browsers where localStorage throws
+     (Safari private mode) — it breaks the loop even with nothing stored.
+
+     ES5 on purpose: this runs before anything else on the page and must not
+     be the one thing that fails to parse.
+
+     Inline and synchronous, not in site.js, because a module is deferred —
+     a whole Ukrainian page would paint before the redirect fired.
+
+     SEO: automatic redirection is only safe while every version is annotated
+     with hreflang, which both pages are (uk / en / x-default below). Do not
+     remove those links and leave this script.                             */
+  (function () {
+    var KEY = 'spbt-lang';
+    var store = null;
+    try { store = window.localStorage; } catch (err) {}
+
+    document.addEventListener('click', function (e) {
+      var opt = e.target && e.target.closest && e.target.closest('[data-lang]');
+      if (!opt || !store) return;
+      try { store.setItem(KEY, opt.getAttribute('data-lang')); } catch (err) {}
+    });
+
+    var saved = null;
+    try { saved = store && store.getItem(KEY); } catch (err) {}
+    if (saved === 'uk') return;
+    if (saved !== 'en') {
+      /* No stored choice. Follow the browser, and never bounce a visitor who
+         has just come from somewhere on this site. */
+      if (document.referrer.indexOf(location.origin) === 0) return;
+      var langs = navigator.languages || [navigator.language || ''];
+      for (var i = 0; i < langs.length; i += 1) {
+        if (/^uk\b/i.test(String(langs[i]))) return;
+      }
+    }
+    location.replace('/en/' + location.search + location.hash);
+  })();
 </script>
 <title>SPBT — Discord-боти, сайти та презентації на замовлення</title>
 <meta name="description" content="SPBT (Small Projects by Taiyo) — Discord-боти з веб-панелями, сайти під ключ, бекенд та інтерактивні презентації на замовлення. Дивіться, що вже працює, і пишіть напряму розробнику.">
@@ -18,8 +66,12 @@
 <meta name="theme-color" content="#050807">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://spbt.pp.ua/">
+<link rel="alternate" hreflang="uk" href="https://spbt.pp.ua/">
+<link rel="alternate" hreflang="en" href="https://spbt.pp.ua/en/">
+<link rel="alternate" hreflang="x-default" href="https://spbt.pp.ua/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="uk_UA">
+<meta property="og:locale:alternate" content="en_US">
 <meta property="og:site_name" content="SPBT">
 <meta property="og:title" content="SPBT — Discord-боти, сайти та презентації на замовлення">
 <meta property="og:description" content="Малі проєкти — живий продакшн. Discord-боти з веб-панелями, сайти під ключ, бекенд та інтерактивні презентації. Пишіть напряму розробнику.">
@@ -51,6 +103,13 @@
       <svg viewBox="0 0 2000 2000" aria-hidden="true"><polygon points="1000,510 1420,755 1420,1000 1108,818 1108,1364 892,1490 892,818 580,1000 580,755" fill="currentColor"/></svg>
       SPBT
     </a>
+
+    <div class="lang" role="group" aria-label="Мова сайту">
+      <span class="lang__slider" aria-hidden="true"></span>
+      <a class="lang__opt is-on" href="/" data-lang="uk" aria-current="true" lang="uk" hreflang="uk">UA</a>
+      <a class="lang__opt" href="/en/" data-lang="en" lang="en" hreflang="en">EN</a>
+    </div>
+
     <a class="btn btn--sm btn--primary nav__cta" data-magnetic href="#contact">Замовити</a>
   </div>
 </header>
@@ -192,7 +251,7 @@
                    дією:
                      0  — у репозиторії немає ні package.json, ні lock-файла,
                           ні node_modules, і жодного зовнішнього хоста;
-                     22 — стільки тестів проходить tools/check.test.mjs;
+                     26 — стільки тестів проходить tools/check.test.mjs;
                      3  — Unbounded, Manrope, JetBrains Mono: три РОДИНИ
                           у 14 блоках @font-face. Файлів .woff2 теж 14, тому
                           підпис говорить про родини, а не про «шрифти» —
@@ -209,7 +268,7 @@
                    абзацу, ~35px кожен. -->
               <dl class="stats" data-reveal data-reveal-delay="3">
                 <div><dt class="u-mono">Залежностей</dt><dd data-counter="0">0</dd></div>
-                <div><dt class="u-mono">Тестів</dt><dd data-counter="22">22</dd></div>
+                <div><dt class="u-mono">Тестів</dt><dd data-counter="26">26</dd></div>
                 <div><dt class="u-mono">Родин шрифтів</dt><dd data-counter="3">3</dd></div>
               </dl>
               <ul class="chips u-mono" data-reveal data-reveal-delay="4">
