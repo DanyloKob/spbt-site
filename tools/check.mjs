@@ -8,6 +8,7 @@ export const ALLOWED_HOSTS = [
   'tano.pp.ua',
   'taiyo.is-a.dev',
   'spbt.pp.ua',
+  'github.com',   /* the open-source SPBT_DB repo */
   /* ftl.if.ua is deliberately absent, exactly as on the portfolio. The lyceum
      site is not launched, so no page may link to it — the site is shown here as
      a blurred teaser and the only clickable target is the case study on

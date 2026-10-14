@@ -255,6 +255,10 @@ test('the project track has one snap anchor and one dot per panel', () => {
     const dots = html.match(/<div class="pjtrack__dots"[^>]*>([\s\S]*?)<\/div>/);
     assert.ok(dots, `${page}: the track has no dots container`);
     assert.equal((dots[1].match(/<span/g) ?? []).length, panels, `${page}: dot count must match panels`);
+    /* components.css sizes the row, the panels and the travel from --pj-n
+       (default 3). A fourth panel without it renders, but never scrolls in. */
+    const declared = Number(html.match(/<section class="pjtrack"[^>]*--pj-n:\s*(\d+)/)?.[1] ?? 3);
+    assert.equal(declared, panels, `${page}: --pj-n is ${declared} but the track has ${panels} panels`);
   }
 });
 
