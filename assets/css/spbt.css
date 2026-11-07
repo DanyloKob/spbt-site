@@ -29,21 +29,24 @@
    viewport-height slide it only steals room the heading and the "також" strip
    need — measured 35px per row of cards on a 800px-tall screen. */
 .cards--offer .card--skill{min-height:0;}
-
-/* Four explicit columns wherever the slide layout is in charge. `auto-fit` with
-   a 240px floor needs 1020px of container for four tracks, and the container is
-   1001px at a 1041px viewport — so the whole 901–1096px band fell to three
-   columns plus one orphan on a second row, and the slide grew 240px past the
-   screen. Narrower cards are taller than wide ones, but a taller card costs far
-   less height than an extra row. */
+/* Six offers in two rows only fit a slide if each card stays short. */
 @media (min-width:901px){
-  .cards--offer{grid-template-columns:repeat(4,minmax(0,1fr));}
+  #order .cards{margin-top:calc(var(--space)*3);gap:calc(var(--space)*2);}
+  #order .card--skill{padding:calc(var(--space)*2.5) calc(var(--space)*3);}
+  #order .card--skill h3{margin-top:0;margin-bottom:calc(var(--space)*1);}
+  #order .also{margin-top:calc(var(--space)*3);padding-top:calc(var(--space)*2);}
+}
+
+/* Three explicit columns wherever the slide layout is in charge: six offers make
+   two full rows. `auto-fit` with a 240px floor changes its column count across
+   the 901-1096px band and leaves an orphan on the last row. */
+@media (min-width:901px){
+  .cards--offer{grid-template-columns:repeat(3,minmax(0,1fr));}
 }
 
 /* ─── "Also" strip ─────────────────────────────────────────────────────
-   Unity, Blender and support work are real, but they are not what this page
-   is selling — so they get one quiet line under the four offers instead of
-   cards of their own. The dot-separated list is `.facts` from components.css;
+   Work on existing projects and support are real, but they are not what this
+   page is selling, so they get one quiet line under the offers. The dot-separated list is `.facts` from components.css;
    this only supplies the rule above it and the label. */
 .also{
   display:flex;
@@ -143,4 +146,127 @@
 
 @media (max-width:900px){
   .also{gap:calc(var(--space)*1) calc(var(--space)*2);}
+}
+
+/* ─── Price ladder ──────────────────────────────────────────────────────
+   Three steps that climb left to right, because that is what the prices do.
+   The sum is the headline of each step and the set it goes with. Steps align
+   at the bottom and grow upward with the scale of the job, which is why the
+   tallest one is the one with no ready figure. Below 901px the stairs have
+   nothing to climb and become an ordinary stack.                             */
+.tiers{
+  display:grid;
+  gap:calc(var(--space)*2);
+  margin:calc(var(--space)*4) 0 0;
+  padding:0;
+  list-style:none;
+}
+.tier{
+  display:flex;
+  flex-direction:column;
+  padding:calc(var(--space)*3);
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  background:var(--surface);
+}
+.tier__sum{
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:var(--step-2);
+  line-height:1.1;
+  letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;
+  color:var(--green);
+}
+.tier h3{
+  margin:calc(var(--space)*1.5) 0 calc(var(--space)*1.5);
+  font-size:var(--step-0);
+}
+.tier ul{
+  display:grid;
+  gap:calc(var(--space)*.75);
+  margin:0;
+  padding:0;
+  list-style:none;
+  color:var(--muted);
+  font-size:.93rem;
+  line-height:1.45;
+}
+.tier li b{color:var(--text);font-weight:600;}
+.tier--top{
+  border-color:var(--green-line);
+  background:var(--green-soft);
+}
+@media (min-width:901px){
+  .tiers{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    align-items:end;
+  }
+  .tier:nth-child(2){padding-top:calc(var(--space)*6);}
+  .tier:nth-child(3){padding-top:calc(var(--space)*9);}
+}
+@media (min-width:901px) and (max-height:800px){
+  .tiers{margin-top:calc(var(--space)*2.5);}
+  .tier{padding:calc(var(--space)*2.25) calc(var(--space)*2.5);}
+  .tier:nth-child(2){padding-top:calc(var(--space)*3.5);}
+  .tier:nth-child(3){padding-top:calc(var(--space)*5);}
+  #price .also{margin-top:calc(var(--space)*2.5);padding-top:calc(var(--space)*2);}
+}
+
+/* ─── Site gallery on /sites/ ───────────────────────────────────────────
+   Five sites, five cells: the lyceum site takes the whole first row because it
+   is the newest and the only one with a before and after, then two rows of
+   two whose widths swap, so the page does not settle into one repeated tile. */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  gap:calc(var(--space)*7) calc(var(--space)*4);
+}
+.showcase{
+  grid-column:span 6;
+  margin:0;
+  min-width:0;
+}
+.showcase:nth-child(2),.showcase:nth-child(5){grid-column:span 7;}
+.showcase:nth-child(3),.showcase:nth-child(4){grid-column:span 5;}
+.showcase--lead{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:minmax(0,2fr) minmax(0,1fr);
+  align-items:end;
+  gap:calc(var(--space)*5);
+}
+.showcase__shot{
+  display:block;
+  overflow:hidden;
+  aspect-ratio:8/5;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  background:var(--bg-soft);
+  transition:border-color .25s ease,transform .16s ease-out;
+}
+.showcase__shot img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:left top;
+  transition:transform .5s var(--ease);
+}
+a.showcase__shot:active{transform:scale(.985);}
+a.showcase__shot:focus-visible{outline:2px solid var(--green);outline-offset:4px;}
+@media (hover:hover) and (pointer:fine){
+  a.showcase__shot:hover{border-color:var(--green-line);}
+  a.showcase__shot:hover img{transform:scale(1.025);}
+}
+.showcase__body{margin-top:calc(var(--space)*2.5);}
+.showcase--lead .showcase__body{margin-top:0;}
+.showcase__body h2{font-size:var(--step-1);margin:0 0 calc(var(--space)*1);}
+.showcase__body p{margin:0;color:var(--muted);max-width:48ch;}
+.showcase__body .card__actions{margin-top:calc(var(--space)*2.5);}
+@media (max-width:900px){
+  .gallery{grid-template-columns:minmax(0,1fr);gap:calc(var(--space)*6);}
+  .showcase,.showcase:nth-child(n){grid-column:auto;}
+  .showcase--lead{grid-template-columns:minmax(0,1fr);gap:0;}
+  .showcase--lead .showcase__body{margin-top:calc(var(--space)*2.5);}
 }

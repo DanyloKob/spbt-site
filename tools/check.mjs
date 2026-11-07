@@ -9,11 +9,7 @@ export const ALLOWED_HOSTS = [
   'taiyo.is-a.dev',
   'spbt.pp.ua',
   'github.com',   /* the open-source SPBT_DB repo */
-  /* ftl.if.ua is deliberately absent, exactly as on the portfolio. The lyceum
-     site is not launched, so no page may link to it — the site is shown here as
-     a blurred teaser and the only clickable target is the case study on
-     taiyo.is-a.dev. Dropping the host makes that a rule the suite enforces
-     instead of a decision a future edit can quietly undo. Add it on launch. */
+  'ftl.if.ua',    /* the lyceum site, launched November 2026 */
   'www.w3.org',   /* only if an inline SVG ever needs an explicit xmlns */
 ];
 

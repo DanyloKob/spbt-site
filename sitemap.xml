@@ -19,4 +19,16 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
+  <url>
+    <loc>https://spbt.pp.ua/sites/</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://spbt.pp.ua/sites/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://spbt.pp.ua/en/sites/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://spbt.pp.ua/sites/"/>
+  </url>
+  <url>
+    <loc>https://spbt.pp.ua/en/sites/</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://spbt.pp.ua/sites/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://spbt.pp.ua/en/sites/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://spbt.pp.ua/sites/"/>
+  </url>
 </urlset>

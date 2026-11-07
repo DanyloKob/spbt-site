@@ -29,7 +29,7 @@ const ORIGIN = 'https://spbt.pp.ua';
    Written out rather than derived from the path: a third language added by
    copy-paste has to be listed here, which is the moment to check that its
    hreflang links and its sitemap entry came with it. */
-const LANG_OF = { 'index.html': 'uk', 'en/index.html': 'en', '404.html': 'uk' };
+const LANG_OF = { 'index.html': 'uk', 'en/index.html': 'en', 'en/sites/index.html': 'en', 'sites/index.html': 'uk', '404.html': 'uk' };
 
 /* The pages that carry the slide layout — one per language. 404.html is an
    ordinary short document and is deliberately not one of them. */
@@ -48,7 +48,7 @@ const css = (name) => readFileSync(join(ROOT, 'assets/css', name), 'utf8');
 const bundle = () => CSS_FILES.map(css).join('\n');
 
 test('the site has the pages it is supposed to have', () => {
-  assert.deepEqual(PAGES.sort(), ['404.html', 'en/index.html', 'index.html']);
+  assert.deepEqual(PAGES.sort(), ['404.html', 'en/index.html', 'en/sites/index.html', 'index.html', 'sites/index.html']);
 });
 
 test('every page declares charset, viewport, language and a title', () => {
@@ -166,15 +166,6 @@ test('every external host is on the allow list', () => {
       if (!host) continue;
       assert.ok(ALLOWED_HOSTS.includes(host), `${file}: unexpected host ${host} (${url})`);
     }
-  }
-});
-
-test('the unlaunched lyceum site is not linked anywhere', () => {
-  for (const file of sourceFiles(ROOT)) {
-    assert.ok(
-      !readSource(file, ROOT).includes('ftl.if.ua'),
-      `${file}: mentions ftl.if.ua, which is not launched yet`,
-    );
   }
 });
 
@@ -313,6 +304,8 @@ test('only the Ukrainian page redirects, and it remembers an explicit choice', (
     !readHtml('en/index.html', ROOT).includes('location.replace'),
     'en/index.html must never redirect: it is the page that shared links point at',
   );
+  assert.ok(!readHtml('en/sites/index.html', ROOT).includes('location.replace'), 'en/sites must never redirect');
+  assert.match(readHtml('sites/index.html', ROOT), /location\.replace\('\/en\/sites\/'/, 'sites/index.html: no language routing');
   /* Inline in the head, not in the deferred module: site.js is type="module",
      so a redirect from there would paint the wrong language first. */
   assert.ok(

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script>
+  document.documentElement.classList.add('js');
+  window.__spbtFailsafe = setTimeout(function () {
+    document.documentElement.classList.add('js-stalled');
+  }, 2500);
+</script>
+<script>
+  /* Те саме правило, що на головній: явний вибір, потім мова браузера. */
+  (function () {
+    var KEY = 'spbt-lang';
+    var store = null;
+    try { store = window.localStorage; } catch (err) {}
+    document.addEventListener('click', function (e) {
+      var opt = e.target && e.target.closest && e.target.closest('[data-lang]');
+      if (!opt || !store) return;
+      try { store.setItem(KEY, opt.getAttribute('data-lang')); } catch (err) {}
+    });
+    var saved = null;
+    try { saved = store && store.getItem(KEY); } catch (err) {}
+    if (saved === 'uk') return;
+    if (saved !== 'en') {
+      if (document.referrer.indexOf(location.origin) === 0) return;
+      var langs = navigator.languages || [navigator.language || ''];
+      for (var i = 0; i < langs.length; i += 1) {
+        if (/^uk\b/i.test(String(langs[i]))) return;
+      }
+    }
+    location.replace('/en/sites/' + location.search + location.hash);
+  })();
+</script>
+<title>Сайти SPBT: кейс</title>
+<meta name="description" content="Усі сайти SPBT із прев’ю: сайт Фізико-технічного ліцею, панель TANO, сайт компанії, портфоліо і застосунок класу.">
+<meta name="author" content="Taiyo Asano">
+<meta name="theme-color" content="#050807">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://spbt.pp.ua/sites/">
+<link rel="alternate" hreflang="uk" href="https://spbt.pp.ua/sites/">
+<link rel="alternate" hreflang="en" href="https://spbt.pp.ua/en/sites/">
+<link rel="alternate" hreflang="x-default" href="https://spbt.pp.ua/sites/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:site_name" content="SPBT">
+<meta property="og:title" content="Сайти SPBT: кейс">
+<meta property="og:description" content="Усі сайти SPBT із прев’ю: сайт Фізико-технічного ліцею, панель TANO, сайт компанії, портфоліо і застосунок класу.">
+<meta property="og:url" content="https://spbt.pp.ua/sites/">
+<meta property="og:image" content="https://spbt.pp.ua/assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Сайти SPBT: кейс">
+<meta name="twitter:description" content="Усі сайти SPBT із прев’ю: сайт Фізико-технічного ліцею, панель TANO, сайт компанії, портфоліо і застосунок класу.">
+<meta name="twitter:image" content="https://spbt.pp.ua/assets/img/og.png">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/layout.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/spbt.css">
+<script type="module" src="/assets/js/site.js"></script>
+</head>
+<body>
+<canvas id="bg-grid" aria-hidden="true"></canvas>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+<div class="page-wipe" aria-hidden="true"></div>
+
+<a class="u-sr" href="#gallery">Перейти до сайтів</a>
+
+<header class="nav" data-nav>
+  <div class="nav__inner">
+    <a class="nav__logo" href="/" data-page-link aria-label="SPBT — на початок">
+      <svg viewBox="0 0 2000 2000" aria-hidden="true"><polygon points="1000,510 1420,755 1420,1000 1108,818 1108,1364 892,1490 892,818 580,1000 580,755" fill="currentColor"/></svg>
+      SPBT
+    </a>
+    <div class="lang" role="group" aria-label="Мова сайту">
+      <span class="lang__slider" aria-hidden="true"></span>
+      <a class="lang__opt is-on" href="/sites/" data-lang="uk" aria-current="true" lang="uk" hreflang="uk">UA</a>
+      <a class="lang__opt" href="/en/sites/" data-lang="en" lang="en" hreflang="en">EN</a>
+    </div>
+    <a class="btn btn--sm btn--primary nav__cta" data-magnetic href="/#contact" data-page-link>Замовити</a>
+  </div>
+</header>
+
+<main>
+  <section class="case">
+    <div class="u-container">
+      <a class="case__back u-mono" href="/#sites" data-page-link><span aria-hidden="true">←</span> На головну</a>
+      <h1 data-type-in>Наші сайти</h1>
+      <p class="case__lead" data-reveal data-reveal-delay="1">П’ять сайтів, які ми зробили й запустили, від застосунку для класу до сайту ліцею з понад 1,6 мільйона відвідувань.</p>
+    </div>
+  </section>
+
+  <section class="section" id="gallery">
+    <div class="u-container gallery">
+      <article class="showcase showcase--lead" data-reveal>
+        <a class="showcase__shot" href="https://ftl.if.ua/" target="_blank" rel="noopener"><img src="/assets/img/site-ftl.jpg" width="1120" height="700" alt="Сайт Фізико-технічного ліцею: бічне меню, дві фотографії корпусів, емблема і назва"></a>
+        <div class="showcase__body">
+          <h2>Сайт ліцею</h2>
+          <p>Заміна сайту на Joomla 2.5 власною системою з панеллю й конструктором блоків. Розділи й лічильник відвідувачів лишилися.</p>
+          <div class="card__actions">
+            <a class="btn btn--sm btn--primary" data-magnetic href="https://ftl.if.ua/" target="_blank" rel="noopener">ftl.if.ua <span aria-hidden="true">↗</span></a>
+            <a class="btn btn--sm" data-magnetic href="https://taiyo.is-a.dev/ftl/" target="_blank" rel="noopener" aria-label="Кейс сайту ліцею: було і стало">Було і стало <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </article>
+      <article class="showcase" data-reveal>
+        <a class="showcase__shot" href="https://tano.pp.ua/" target="_blank" rel="noopener"><img src="/assets/img/tano-shot.jpg" width="1280" height="640" loading="lazy" alt="Головна сторінка панелі TANO v27 з кнопкою Add to server і пошуком"></a>
+        <div class="showcase__body">
+          <h2>TANO</h2>
+          <p>Сайт і веб-панель Discord-бота: налаштування сервера без команд.</p>
+          <div class="card__actions">
+            <a class="btn btn--sm" data-magnetic href="https://tano.pp.ua/" target="_blank" rel="noopener">tano.pp.ua <span aria-hidden="true">↗</span></a>
+            <a class="btn btn--sm" data-magnetic href="https://taiyo.is-a.dev/tano/" target="_blank" rel="noopener" aria-label="Кейс TANO">Кейс <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </article>
+      <article class="showcase" data-reveal>
+        <span class="showcase__shot"><img src="/assets/img/site-spbt.jpg" width="960" height="600" loading="lazy" alt="Головна сторінка spbt.pp.ua із заголовком про малі проєкти"></span>
+        <div class="showcase__body">
+          <h2>SPBT</h2>
+          <p>Сайт компанії, який ви зараз дивитесь.</p>
+        </div>
+      </article>
+      <article class="showcase" data-reveal>
+        <a class="showcase__shot" href="https://taiyo.is-a.dev/" target="_blank" rel="noopener"><img src="/assets/img/site-portfolio.jpg" width="960" height="600" loading="lazy" alt="Головна сторінка портфоліо Таійо з великим заголовком"></a>
+        <div class="showcase__body">
+          <h2>Портфоліо</h2>
+          <p>Особистий сайт розробника, дві мови, 3D-емблема на канві.</p>
+          <div class="card__actions">
+            <a class="btn btn--sm" data-magnetic href="https://taiyo.is-a.dev/" target="_blank" rel="noopener">taiyo.is-a.dev <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </article>
+      <article class="showcase" data-reveal>
+        <a class="showcase__shot" href="https://github.com/DanyloKob/class-group-site" target="_blank" rel="noopener"><img src="/assets/img/site-class.jpg" width="960" height="600" loading="lazy" alt="Екран входу застосунку класу L-23 LIFE з емблемою і кнопкою входу через Telegram"></a>
+        <div class="showcase__body">
+          <h2>Сайт групи</h2>
+          <p>Застосунок класу під телефон: розклад, чергування, ДЗ, збори, вхід через Telegram. Усередині дані учнів, тому показуємо лише вхід, зате код відкритий.</p>
+          <div class="card__actions">
+            <a class="btn btn--sm" data-magnetic href="https://github.com/DanyloKob/class-group-site" target="_blank" rel="noopener" aria-label="Код сайту класу на GitHub">GitHub <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="u-container">
+      <h2 data-reveal>Потрібен такий самий?</h2>
+      <p data-reveal data-reveal-delay="1">Опишіть задачу, і ми назвемо строк і суму до початку.</p>
+      <div class="cta__actions" data-reveal data-reveal-delay="2">
+        <a class="btn btn--primary" data-magnetic href="/#contact" data-page-link>Замовити <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="u-container footer__inner">
+    <div class="footer__brand">
+      <p><strong>SPBT</strong>: Small Projects by Taiyo</p>
+      <p class="footer__meta u-mono">spbt.pp.ua · Україна · 2026</p>
+    </div>
+    <nav class="footer__nav" aria-label="Навігація у футері">
+      <a href="/#work">Що вже працює</a>
+      <a href="/#price">Ціни й строки</a>
+      <a href="/#contact">Контакти</a>
+    </nav>
+    <p class="footer__powered">
+      Powered by <strong>SPBT</strong> <span>&copy;2025-2026</span>
+    </p>
+  </div>
+</footer>
+</body>
+</html>
